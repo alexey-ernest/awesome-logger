@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.OData;
 using AwesomeLogger.Subscriptions.Api.DAL;
 using AwesomeLogger.Subscriptions.Api.Exceptions;
 using AwesomeLogger.Subscriptions.Api.Infrastructure.Filters;
@@ -21,11 +23,13 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
             _db = db;
         }
 
+        [EnableQuery]
         [AuthorizeInternal]
         [Route("")]
-        public Task<Subscription> Get()
+        public IQueryable<Subscription> Get()
         {
-            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Forbidden));
+            IQueryable<Subscription> subs = _db.AsQueryable();
+            return subs;
         }
 
         [AuthorizeInternal]
@@ -45,11 +49,6 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         [Route("")]
         public async Task<HttpResponseMessage> Post(SubscriptionCreateUpdateModel model)
         {
-            if (model == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-
             var sub = new Subscription
             {
                 MachineName = model.MachineName,
@@ -67,11 +66,6 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         [Route("{id:int}")]
         public async Task<HttpResponseMessage> Put(int id, SubscriptionCreateUpdateModel model)
         {
-            if (model == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-
             var sub = new Subscription
             {
                 MachineName = model.MachineName,
@@ -98,11 +92,6 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         [Route("machine/{machine}")]
         public async Task<IEnumerable<Subscription>> GetByMachine(string machine)
         {
-            if (string.IsNullOrEmpty(machine))
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Forbidden));
-            }
-
             var subs = await _db.GetByMachineAsync(machine);
             return subs;
         }

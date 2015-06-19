@@ -21,6 +21,11 @@ namespace AwesomeLogger.Subscriptions.Api.DAL
             _db.Dispose();
         }
 
+        public IQueryable<Subscription> AsQueryable()
+        {
+            return _db.Subscriptions;
+        }
+
         public async Task<Subscription> GetAsync(int id)
         {
             return await _db.Subscriptions.FirstOrDefaultAsync(p => p.Id == id);
