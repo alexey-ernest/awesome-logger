@@ -3,5 +3,7 @@
     public interface IConfigurationProvider
     {
         string Get(string name);
+
+        string GetMachineName();
     }
 }
