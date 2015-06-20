@@ -4,8 +4,8 @@ namespace AwesomeLogger.Monitor.Initializers
 {
     internal class DiagnosticsInitializer : IDiagnosticsInitializer
     {
-        private const string EventSourceName = "AwesomeLogger";
-        private const string LogName = "Monitor";
+        private const string EventSourceName = "Monitor";
+        private const string LogName = "AwesomeLogger";
 
         public void Initialize()
         {

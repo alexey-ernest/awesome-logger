@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using AwesomeLogger.Monitor.Events;
 
 namespace AwesomeLogger.Monitor
@@ -29,7 +31,7 @@ namespace AwesomeLogger.Monitor
             _watcher.Dispose();
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
             try
             {
@@ -45,14 +47,16 @@ namespace AwesomeLogger.Monitor
                     Filter = file
                 };
 
-                // Add event handlers
+                // Watching for changes
                 _watcher.Changed += OnChanged;
                 _watcher.Created += OnChanged;
                 _watcher.Deleted += OnChanged;
                 _watcher.Renamed += OnRenamed;
 
-                // Begin watching
                 _watcher.EnableRaisingEvents = true;
+
+                // Scan logs
+                await ScanAsync(_filePath);
             }
             catch (Exception e)
             {
@@ -61,29 +65,55 @@ namespace AwesomeLogger.Monitor
             }
         }
 
+        private async Task ScanAsync(string path)
+        {
+            var baseDir = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(baseDir))
+            {
+                return;
+            }
+
+            var filePattern = Path.GetFileName(path);
+            if (!Directory.Exists(baseDir) && !File.Exists(baseDir))
+            {
+                // path does not exist
+                return;
+            }
+
+            var attr = File.GetAttributes(baseDir);
+            if (attr.HasFlag(FileAttributes.Directory))
+            {
+                // directory, read files
+                var di = new DirectoryInfo(baseDir);
+                var files = di.GetFiles(filePattern, SearchOption.TopDirectoryOnly);
+
+                // scanning files
+                var scanningTasks = files.Select(fileInfo => ParseAsync(fileInfo.FullName)).ToList();
+                await Task.WhenAll(scanningTasks);
+            }
+            else
+            {
+                // file
+                await ParseAsync(baseDir);
+            }
+        }
+
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            try
-            {
-                var parser = new LogParser(_machineName, e.FullPath, _pattern, _matchEventEmitter);
-                parser.ParseAsync().Wait();
-            }
-            catch (Exception ex)
-            {
-                _errorEventEmitter.EmitAsync(new Dictionary<string, string>
-                {
-                    {"MachineName", _machineName},
-                    {"Error", string.Format("Failed to parse log '{0}': {1}", _filePath, ex)}
-                }).Wait();
-            }
+            ParseAsync(e.FullPath).Wait();
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
+            ParseAsync(e.FullPath).Wait();
+        }
+
+        private async Task ParseAsync(string filePath)
+        {
             try
             {
-                var parser = new LogParser(_machineName, e.FullPath, _pattern, _matchEventEmitter);
-                parser.ParseAsync().Wait();
+                var parser = new LogParser(_machineName, filePath, _pattern, _matchEventEmitter);
+                await parser.ParseAsync();
             }
             catch (Exception ex)
             {

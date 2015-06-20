@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using AwesomeLogger.Monitor.Configuration;
 using AwesomeLogger.Monitor.Events;
@@ -33,7 +34,7 @@ namespace AwesomeLogger.Monitor
                 // Start monitoring
                 StartMonitoring();
 
-                // Listen for parameter updates
+                // Process messages
                 var serviceBusClient =
                     SubscriptionClient.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString),
                         _config.Get(SettingNames.ServiceBusSubscriptionTopic),
@@ -93,7 +94,6 @@ namespace AwesomeLogger.Monitor
                             {"Error", msg}
                         }).Wait();
                     }
-
                 }, new OnMessageOptions
                 {
                     AutoComplete = false
@@ -136,16 +136,17 @@ namespace AwesomeLogger.Monitor
                     _errorEventEmitter, _matchEventEmitter));
             }
 
-            // Start monitors
-            foreach (var monitor in _monitors)
+            // Start monitors in parallel
+            Task.Run(() =>
             {
                 try
                 {
-                    monitor.Start();
+                    var monitoringTasks = _monitors.Select(monitor => monitor.StartAsync()).ToList();
+                    Task.WhenAll(monitoringTasks).Wait();
                 }
                 catch (Exception e)
                 {
-                    var msg = string.Format("Failed to monitor log: {0}", e);
+                    var msg = string.Format("Failed to monitor logs: {0}", e);
                     Trace.TraceError(msg);
 
                     _errorEventEmitter.EmitAsync(new Dictionary<string, string>
@@ -154,7 +155,7 @@ namespace AwesomeLogger.Monitor
                         {"Error", msg}
                     }).Wait();
                 }
-            }
+            });
         }
 
         private void StopMonitoring()

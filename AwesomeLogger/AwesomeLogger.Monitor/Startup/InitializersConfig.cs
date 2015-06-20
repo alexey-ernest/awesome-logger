@@ -28,6 +28,6 @@ namespace AwesomeLogger.Monitor.Startup
                 Trace.TraceError("Failed to initialize: {0}", e);
                 throw;
             }
-        }
+        ;}
     }
 }

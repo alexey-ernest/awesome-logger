@@ -2,6 +2,7 @@
 using AwesomeLogger.Monitor.Configuration;
 using AwesomeLogger.Monitor.Events;
 using AwesomeLogger.Monitor.Initializers;
+using AwesomeLogger.Monitor.Subscriptions;
 using Microsoft.Practices.Unity;
 
 namespace AwesomeLogger.Monitor.Startup
@@ -26,6 +27,8 @@ namespace AwesomeLogger.Monitor.Startup
             container.RegisterType<IConfigurationProvider, ConfigurationProvider>(
                 new ContainerControlledLifetimeManager());
 
+            container.RegisterType<ISubscriptionServiceClient, SubscriptionServiceClient>(
+                new ContainerControlledLifetimeManager());
             container.RegisterType<IMonitorManager, MonitorManager>(
                 new ContainerControlledLifetimeManager());
             container.RegisterType<IErrorEventEmitter>(
@@ -37,9 +40,9 @@ namespace AwesomeLogger.Monitor.Startup
             container.RegisterType<IMatchEventEmitter>(
                 new InjectionFactory(
                     c =>
-                        new ErrorEventEmitter(
+                        new MatchEventEmitter(
                             container.Resolve<IConfigurationProvider>().Get(SettingNames.ServiceBusConnectionString),
-                            container.Resolve<IConfigurationProvider>().Get(SettingNames.ServiceBusSubscriptionTopic))));
+                            container.Resolve<IConfigurationProvider>().Get(SettingNames.ServiceBusNotifyTopic))));
 
             // Initializers
             container.RegisterType<IDiagnosticsInitializer, DiagnosticsInitializer>(
