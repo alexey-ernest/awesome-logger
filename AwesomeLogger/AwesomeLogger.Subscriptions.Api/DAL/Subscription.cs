@@ -10,6 +10,7 @@ namespace AwesomeLogger.Subscriptions.Api.DAL
         [Required]
         public DateTime Created { get; set; }
 
+        [MaxLength(200)]
         [Required]
         public string MachineName { get; set; }
 
