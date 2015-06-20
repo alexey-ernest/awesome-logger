@@ -171,6 +171,15 @@
     <Compile Include="Infrastructure\Filters\HttpExceptionHandlingAttribute.cs" />
     <Compile Include="Infrastructure\Filters\UnityFilterProvider.cs" />
     <Compile Include="Infrastructure\Filters\ValidationHttpAttribute.cs" />
+    <Compile Include="Migrations\201506192206539_InitialCreate.cs" />
+    <Compile Include="Migrations\201506192206539_InitialCreate.Designer.cs">
+      <DependentUpon>201506192206539_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506200007144_AddIndices.cs" />
+    <Compile Include="Migrations\201506200007144_AddIndices.Designer.cs">
+      <DependentUpon>201506200007144_AddIndices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\SubscriptionCreateUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -184,7 +193,14 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201506192206539_InitialCreate.resx">
+      <DependentUpon>201506192206539_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506200007144_AddIndices.resx">
+      <DependentUpon>201506200007144_AddIndices.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
