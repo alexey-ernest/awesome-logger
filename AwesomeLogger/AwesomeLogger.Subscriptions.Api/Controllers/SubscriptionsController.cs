@@ -87,7 +87,6 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
             return response;
         }
 
-        [AuthorizeInternal]
         [AuthorizeExternal]
         [Route("machine/{machine}")]
         public async Task<IEnumerable<Subscription>> GetByMachine(string machine)
