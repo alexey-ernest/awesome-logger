@@ -15,8 +15,9 @@ namespace AwesomeLogger.Monitor
         private readonly IMatchEventEmitter _matchEventEmitter;
         private readonly string _pattern;
         private FileSystemWatcher _watcher;
+        private readonly string _emailToNotify;
 
-        public LogMonitor(string machineName, string filePath, string pattern, IErrorEventEmitter errorEventEmitter,
+        public LogMonitor(string machineName, string filePath, string pattern, string emailToNotify, IErrorEventEmitter errorEventEmitter,
             IMatchEventEmitter matchEventEmitter)
         {
             _machineName = machineName;
@@ -24,6 +25,7 @@ namespace AwesomeLogger.Monitor
             _pattern = pattern;
             _errorEventEmitter = errorEventEmitter;
             _matchEventEmitter = matchEventEmitter;
+            _emailToNotify = emailToNotify;
         }
 
         public void Dispose()
@@ -112,7 +114,7 @@ namespace AwesomeLogger.Monitor
         {
             try
             {
-                var parser = new LogParser(_machineName, filePath, _pattern, _matchEventEmitter);
+                var parser = new LogParser(_machineName, filePath, _pattern, _emailToNotify, _matchEventEmitter);
                 await parser.ParseAsync();
             }
             catch (Exception ex)

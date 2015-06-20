@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using AwesomeLogger.Monitor.Startup;
+using AwesomeLogger.NotificationService.Startup;
 using Microsoft.Practices.Unity;
 
-namespace AwesomeLogger.Monitor
+namespace AwesomeLogger.NotificationService
 {
-    internal static class Program
+    internal class Program
     {
-        private const string ServicePrintName = "AwesomeLogger Monitor";
+        private const string ServicePrintName = "AwesomeLogger Notification Service";
 
         public static void Start()
         {
@@ -18,9 +18,9 @@ namespace AwesomeLogger.Monitor
 
                 Trace.TraceInformation("{0} started.", ServicePrintName);
 
-                // Start
-                var monitor = container.Resolve<IMonitorManager>();
-                monitor.Start();
+                // Process messages
+                var notificationManager = container.Resolve<INotificationManager>();
+                notificationManager.Start();
             }
             catch (Exception e)
             {

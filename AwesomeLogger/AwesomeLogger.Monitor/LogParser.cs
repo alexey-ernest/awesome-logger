@@ -11,14 +11,16 @@ namespace AwesomeLogger.Monitor
     {
         private readonly string _filePath;
         private readonly string _machineName;
-        private readonly IMatchEventEmitter _matchEventEmitter;
         private readonly string _pattern;
+        private readonly string _emailToNotify;
+        private readonly IMatchEventEmitter _matchEventEmitter;
 
-        public LogParser(string machineName, string filePath, string pattern, IMatchEventEmitter matchEventEmitter)
+        public LogParser(string machineName, string filePath, string pattern, string emailToNotify, IMatchEventEmitter matchEventEmitter)
         {
             _filePath = filePath;
             _pattern = pattern;
             _matchEventEmitter = matchEventEmitter;
+            _emailToNotify = emailToNotify;
             _machineName = machineName;
         }
 
@@ -33,8 +35,10 @@ namespace AwesomeLogger.Monitor
                 using (var file = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
                 {
                     string line;
+                    var lineNumber = 0;
                     while ((line = await file.ReadLineAsync()) != null)
                     {
+                        lineNumber++;
                         if (!regex.IsMatch(line))
                         {
                             continue;
@@ -42,20 +46,22 @@ namespace AwesomeLogger.Monitor
 
                         // emitting match event in parallel 
                         var match = line;
-                        NotifyInBackground(match);
+                        NotifyInBackground(match, lineNumber);
                     }
                 }
             }
         }
 
-        private void NotifyInBackground(string match)
+        private void NotifyInBackground(string match, int lineNumber)
         {
             Task.Run(async () =>
                 await _matchEventEmitter.EmitAsync(new Dictionary<string, string>
                 {
                     {"MachineName", _machineName},
                     {"Path", _filePath},
-                    {"Match", match}
+                    {"Match", match},
+                    {"Line", lineNumber.ToString()},
+                    {"Email", _emailToNotify}
                 }));
         }
     }

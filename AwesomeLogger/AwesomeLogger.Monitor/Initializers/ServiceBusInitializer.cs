@@ -8,6 +8,7 @@ namespace AwesomeLogger.Monitor.Initializers
     internal class ServiceBusInitializer : IServiceBusInitializer
     {
         private readonly IConfigurationProvider _config;
+        private const string AllMessages = "AllMessages";
 
         public ServiceBusInitializer(IConfigurationProvider config)
         {
@@ -25,7 +26,6 @@ namespace AwesomeLogger.Monitor.Initializers
                 {
                     namespaceManager.CreateTopic(subscriptionTopic);
                 }
-
                 var subscriptionChannel = _config.GetMachineName();
                 if (!namespaceManager.SubscriptionExists(subscriptionTopic, subscriptionChannel))
                 {
@@ -36,6 +36,20 @@ namespace AwesomeLogger.Monitor.Initializers
                 if (!namespaceManager.TopicExists(errorTopic))
                 {
                     namespaceManager.CreateTopic(errorTopic);
+                }
+                if (!namespaceManager.SubscriptionExists(errorTopic, AllMessages))
+                {
+                    namespaceManager.CreateSubscription(errorTopic, AllMessages);
+                }
+
+                var notifyTopic = _config.Get(SettingNames.ServiceBusNotifyTopic);
+                if (!namespaceManager.TopicExists(notifyTopic))
+                {
+                    namespaceManager.CreateTopic(notifyTopic);
+                }
+                if (!namespaceManager.SubscriptionExists(notifyTopic, AllMessages))
+                {
+                    namespaceManager.CreateSubscription(notifyTopic, AllMessages);
                 }
             }
             catch (Exception e)

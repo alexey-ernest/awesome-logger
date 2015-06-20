@@ -132,7 +132,7 @@ namespace AwesomeLogger.Monitor
             _monitors.Clear();
             foreach (var param in subParams)
             {
-                _monitors.Add(new LogMonitor(_config.GetMachineName(), param.LogPath, param.Pattern,
+                _monitors.Add(new LogMonitor(_config.GetMachineName(), param.LogPath, param.Pattern, param.Email,
                     _errorEventEmitter, _matchEventEmitter));
             }
 

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.Subscriptions
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.Monitor", "AwesomeLogger.Monitor\AwesomeLogger.Monitor.csproj", "{365A63F5-6A86-4257-BC27-A154782712A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.NotificationService", "AwesomeLogger.NotificationService\AwesomeLogger.NotificationService.csproj", "{3CAB7744-E77A-42F4-9B8C-D687907B9670}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{365A63F5-6A86-4257-BC27-A154782712A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{365A63F5-6A86-4257-BC27-A154782712A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{365A63F5-6A86-4257-BC27-A154782712A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CAB7744-E77A-42F4-9B8C-D687907B9670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CAB7744-E77A-42F4-9B8C-D687907B9670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CAB7744-E77A-42F4-9B8C-D687907B9670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CAB7744-E77A-42F4-9B8C-D687907B9670}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
