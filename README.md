@@ -3,6 +3,13 @@ Log monitoring and notification system. The system allows its users to monitor i
 
 ## Requirements
 
+Software:
+* Microsoft Visual Studio 2013
+* [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx)
+* Microsoft SQL Server 2014 Express LocalDB
+* 
+
+
 ## How to Build
 
 ## How to Install
