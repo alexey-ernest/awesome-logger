@@ -10,7 +10,7 @@ OS:
 Software:
 * Microsoft Visual Studio 2013
 * Microsoft SQL Server 2014 Express LocalDB (should be bundled with Visual Studio)
-* [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx)
+* [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx). Installation instructions also provided [here](#installing-service-bus).
 
 ## How to Build
 * Open `AwesomeLogger/AwesomeLogger.sln`
@@ -19,7 +19,7 @@ Software:
 
 ## How to Install
 
-# Installing Service Bus
+### Installing Service Bus
 Take a look at the instructions provided by [Microsoft](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx). You can install single Service Bus and then add instances to the farm, so the channel between your sevices will be robust and will not have SPOF (single point of failure).
 
 * Install using Web Platform Installer (search by keywords `Windows Azure Service Bus 1.1.`)
