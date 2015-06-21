@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.ServiceProcess;
 using AwesomeLogger.Monitor.Startup;
 using Microsoft.Practices.Unity;
 
@@ -8,6 +9,7 @@ namespace AwesomeLogger.Monitor
     internal static class Program
     {
         private const string ServicePrintName = "AwesomeLogger Monitor";
+        private static IMonitorManager _monitorManager;
 
         public static void Start()
         {
@@ -19,8 +21,8 @@ namespace AwesomeLogger.Monitor
                 Trace.TraceInformation("{0} started.", ServicePrintName);
 
                 // Start
-                var monitor = container.Resolve<IMonitorManager>();
-                monitor.Start();
+                _monitorManager = container.Resolve<IMonitorManager>();
+                _monitorManager.Start();
             }
             catch (Exception e)
             {
@@ -31,16 +33,29 @@ namespace AwesomeLogger.Monitor
         public static void Stop()
         {
             Trace.TraceInformation("{0} stopped.", ServicePrintName);
+            _monitorManager.Dispose();
         }
 
         private static void Main()
         {
-            Start();
+            if (!Environment.UserInteractive)
+            {
+                // Windows service
+                using (var service = new MonitorService())
+                {
+                    ServiceBase.Run(service);
+                }
+            }
+            else
+            {
+                // Console
+                Start();
 
-            Console.WriteLine("Press any key to stop...");
-            Console.ReadKey(true);
+                Console.WriteLine("Press any key to stop...");
+                Console.ReadKey(true);
 
-            Stop();
+                Stop();
+            }
         }
     }
 }

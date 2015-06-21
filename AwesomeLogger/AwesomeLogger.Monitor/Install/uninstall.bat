@@ -1,0 +1,1 @@
+InstallUtil.exe /u ../AwesomeLogger.Monitor.exe
