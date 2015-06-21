@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AwesomeLogger.Monitor.Initializers;
+using AwesomeLogger.Subscriptions.Api.Initializers;
 using Microsoft.Practices.Unity;
 
-namespace AwesomeLogger.Monitor.Startup
+namespace AwesomeLogger.Subscriptions.Api
 {
     public static class InitializersConfig
     {
@@ -14,7 +14,6 @@ namespace AwesomeLogger.Monitor.Startup
             {
                 var initializers = new List<IInitializable>
                 {
-                    container.Resolve<IDiagnosticsInitializer>(),
                     container.Resolve<IServiceBusInitializer>()
                 };
 

@@ -58,9 +58,9 @@ namespace AwesomeLogger.Subscriptions.Api.DAL
             return original;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Subscription sub)
         {
-            var sub = await GetAsync(id);
+            sub = await GetAsync(sub.Id);
             if (sub == null)
             {
                 throw new NotFoundException("Subscription does not exist.");

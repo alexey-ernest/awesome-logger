@@ -94,7 +94,8 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         {
             try
             {
-                await _db.DeleteAsync(id);
+                var sub = await _db.GetAsync(id);
+                await _db.DeleteAsync(sub);
             }
             catch (NotFoundException)
             {

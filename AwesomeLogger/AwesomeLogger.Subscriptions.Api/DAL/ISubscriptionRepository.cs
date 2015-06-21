@@ -17,6 +17,6 @@ namespace AwesomeLogger.Subscriptions.Api.DAL
 
         Task<Subscription> UpdateAsync(Subscription sub);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Subscription sub);
     }
 }

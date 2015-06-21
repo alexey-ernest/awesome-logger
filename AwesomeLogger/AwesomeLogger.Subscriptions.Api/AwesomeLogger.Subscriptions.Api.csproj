@@ -64,6 +64,12 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception">
+      <HintPath>..\packages\Unity.Interception.3.5.1404.0\lib\Net45\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
+      <HintPath>..\packages\Unity.Interception.3.5.1404.0\lib\Net45\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Unity.Mvc">
       <HintPath>..\packages\Unity.Mvc.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Mvc.dll</HintPath>
     </Reference>
@@ -73,6 +79,12 @@
     <Reference Include="Microsoft.Practices.Unity.WebApi">
       <HintPath>..\packages\Unity.AspNet.WebApi.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ServiceBus">
+      <HintPath>..\packages\ServiceBus.v1_1.1.0.5\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.0.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -80,6 +92,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
@@ -147,6 +160,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\InitializersConfig.cs" />
     <Compile Include="App_Start\JsonConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\IoCConfig.cs" />
@@ -158,6 +172,8 @@
     <Compile Include="DAL\Subscription.cs" />
     <Compile Include="DAL\SubscriptionDbContext.cs" />
     <Compile Include="DAL\SubscriptionRepository.cs" />
+    <Compile Include="Events\IEventEmitter.cs" />
+    <Compile Include="Events\ServiceBusEventEmitter.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\SubscriptionApiException.cs" />
     <Compile Include="Global.asax.cs">
@@ -172,6 +188,10 @@
     <Compile Include="Infrastructure\Filters\HttpExceptionHandlingAttribute.cs" />
     <Compile Include="Infrastructure\Filters\UnityFilterProvider.cs" />
     <Compile Include="Infrastructure\Filters\ValidationHttpAttribute.cs" />
+    <Compile Include="Initializers\IInitializable.cs" />
+    <Compile Include="Initializers\IServiceBusInitializer.cs" />
+    <Compile Include="Initializers\ServiceBusInitializer.cs" />
+    <Compile Include="Interceptions\SubscriptionNotificationsInterception.cs" />
     <Compile Include="Migrations\201506192206539_InitialCreate.cs" />
     <Compile Include="Migrations\201506192206539_InitialCreate.Designer.cs">
       <DependentUpon>201506192206539_InitialCreate.cs</DependentUpon>
