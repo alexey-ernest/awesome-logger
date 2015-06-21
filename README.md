@@ -5,10 +5,8 @@ Log monitoring and notification system. The system allows its users to monitor i
 
 Software:
 * Microsoft Visual Studio 2013
+* Microsoft SQL Server 2014 Express LocalDB (should be bundled with Visual Studio)
 * [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx)
-* Microsoft SQL Server 2014 Express LocalDB
-* 
-
 
 ## How to Build
 
