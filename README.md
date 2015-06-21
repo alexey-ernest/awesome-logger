@@ -32,5 +32,6 @@ The system consists of several services and website. All components are loosely 
 ## Further Improvements
 
 ## Licence
+The system is distributed under [MIT](LICENSE) license.
 
 ## Contacts
