@@ -3,6 +3,10 @@ Log monitoring and notification system. The system allows its users to monitor i
 
 ## Requirements
 
+OS:
+* Windows 8.1
+* .Net Framework 4.5
+
 Software:
 * Microsoft Visual Studio 2013
 * Microsoft SQL Server 2014 Express LocalDB (should be bundled with Visual Studio)
