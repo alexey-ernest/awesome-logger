@@ -13,18 +13,18 @@ namespace AwesomeLogger.Monitor
     {
         private readonly IConfigurationProvider _config;
         private readonly IErrorEventEmitter _errorEventEmitter;
-        private readonly IMatchEventEmitter _matchEventEmitter;
+        private readonly ILogMonitorFactory _monitorFactory;
         private readonly List<ILogMonitor> _monitors = new List<ILogMonitor>();
         private readonly ISubscriptionServiceClient _service;
         private SubscriptionClient _client;
 
         public MonitorManager(ISubscriptionServiceClient service, IConfigurationProvider config,
-            IErrorEventEmitter errorEventEmitter, IMatchEventEmitter matchEventEmitter)
+            IErrorEventEmitter errorEventEmitter, ILogMonitorFactory monitorFactory)
         {
             _service = service;
             _config = config;
             _errorEventEmitter = errorEventEmitter;
-            _matchEventEmitter = matchEventEmitter;
+            _monitorFactory = monitorFactory;
         }
 
         public void Start()
@@ -133,8 +133,7 @@ namespace AwesomeLogger.Monitor
             _monitors.Clear();
             foreach (var param in subParams)
             {
-                _monitors.Add(new LogMonitor(_config.GetMachineName(), param.LogPath, param.Pattern, param.Email,
-                    _errorEventEmitter, _matchEventEmitter));
+                _monitors.Add(_monitorFactory.Create(_config.GetMachineName(), param.LogPath, param.Pattern, param.Email));
             }
 
             // Start monitors in parallel

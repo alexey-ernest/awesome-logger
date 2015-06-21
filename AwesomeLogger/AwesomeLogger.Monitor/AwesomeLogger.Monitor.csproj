@@ -82,7 +82,9 @@
     <Compile Include="Events\IMatchEventEmitter.cs" />
     <Compile Include="Events\IErrorEventEmitter.cs" />
     <Compile Include="ILogMonitor.cs" />
+    <Compile Include="ILogMonitorFactory.cs" />
     <Compile Include="ILogParser.cs" />
+    <Compile Include="ILogParserFactory.cs" />
     <Compile Include="IMonitorManager.cs" />
     <Compile Include="Initializers\DiagnosticsInitializer.cs" />
     <Compile Include="Initializers\IDiagnosticsInitializer.cs" />
@@ -90,7 +92,9 @@
     <Compile Include="Initializers\IServiceBusInitializer.cs" />
     <Compile Include="Initializers\ServiceBusInitializer.cs" />
     <Compile Include="LogMonitor.cs" />
+    <Compile Include="LogMonitorFactory.cs" />
     <Compile Include="LogParser.cs" />
+    <Compile Include="LogParserFactory.cs" />
     <Compile Include="MonitorManager.cs" />
     <Compile Include="Events\ServiceBusEventEmitter.cs" />
     <Compile Include="Events\IEventEmitter.cs" />

@@ -13,20 +13,19 @@ namespace AwesomeLogger.Monitor
         private readonly IErrorEventEmitter _errorEventEmitter;
         private readonly string _filePath;
         private readonly string _machineName;
-        private readonly IMatchEventEmitter _matchEventEmitter;
         private readonly string _pattern;
+        private readonly ILogParserFactory _logParserFactory;
         private FileSystemWatcher _watcher;
         private List<ILogParser> _parsers;
 
         public LogMonitor(string machineName, string filePath, string pattern, string emailToNotify,
-            IErrorEventEmitter errorEventEmitter,
-            IMatchEventEmitter matchEventEmitter)
+            IErrorEventEmitter errorEventEmitter, ILogParserFactory logParserFactory)
         {
             _machineName = machineName;
             _filePath = filePath;
             _pattern = pattern;
             _errorEventEmitter = errorEventEmitter;
-            _matchEventEmitter = matchEventEmitter;
+            _logParserFactory = logParserFactory;
             _emailToNotify = emailToNotify;
         }
 
@@ -120,7 +119,7 @@ namespace AwesomeLogger.Monitor
 
         private ILogParser Parse(string filePath)
         {
-            var parser = new LogParser(_machineName, filePath, _pattern, _emailToNotify, _matchEventEmitter);
+            var parser = _logParserFactory.Create(_machineName, filePath, _pattern, _emailToNotify);
 
             // parsing in parallel
             Task.Run(async () =>

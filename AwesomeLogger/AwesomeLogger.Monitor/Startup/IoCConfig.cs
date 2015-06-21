@@ -7,7 +7,7 @@ using Microsoft.Practices.Unity;
 
 namespace AwesomeLogger.Monitor.Startup
 {
-    public static class IoCConfig
+    internal static class IoCConfig
     {
         private static readonly Lazy<IUnityContainer> Container = new Lazy<IUnityContainer>(() =>
         {
@@ -43,6 +43,10 @@ namespace AwesomeLogger.Monitor.Startup
                         new MatchEventEmitter(
                             container.Resolve<IConfigurationProvider>().Get(SettingNames.ServiceBusConnectionString),
                             container.Resolve<IConfigurationProvider>().Get(SettingNames.ServiceBusNotifyTopic))));
+            container.RegisterType<ILogMonitorFactory, LogMonitorFactory>(
+                new ContainerControlledLifetimeManager());
+            container.RegisterType<ILogParserFactory, LogParserFactory>(
+                new ContainerControlledLifetimeManager());
 
             // Initializers
             container.RegisterType<IDiagnosticsInitializer, DiagnosticsInitializer>(
