@@ -36,6 +36,9 @@ namespace AwesomeLogger.NotificationService
                     object logPath;
                     message.Properties.TryGetValue("Path", out logPath);
 
+                    object pattern;
+                    message.Properties.TryGetValue("Pattern", out pattern);
+
                     object matchLine;
                     message.Properties.TryGetValue("Match", out matchLine);
 
@@ -51,9 +54,10 @@ namespace AwesomeLogger.NotificationService
                     var body = string.Format("Pattern match found.\n\n" +
                                              "Machine: {0}\n" +
                                              "Path: {1}\n" +
-                                             "Line number: {2}\n" +
-                                             "Match: {3}\n" +
-                                             "Email: {4}", machineName, logPath, lineNumber, matchLine, email);
+                                             "Pattern: {2}\n" +
+                                             "Line number: {3}\n" +
+                                             "Match: {4}\n" +
+                                             "Email: {5}", machineName, logPath, pattern, lineNumber, matchLine, email);
                     Trace.TraceInformation(body);
 
                     // Sending email notification
@@ -63,8 +67,9 @@ namespace AwesomeLogger.NotificationService
                         var subject = string.Format("AwesomeLogger match found on machine {0}", machineName);
                         var htmlBody = string.Format("Machine: {0}<br /><br />" +
                                              "Path: {1}<br /><br />" +
-                                             "Line number: {2}<br /><br />" +
-                                             "Match: {3}", machineName, logPath, lineNumber, matchLine);
+                                             "Pattern: {2}<br /><br />" +
+                                             "Line number: {3}<br /><br />" +
+                                             "Match: {4}", machineName, logPath, pattern, lineNumber, matchLine);
                         var msg = new MailMessage
                         {
                             Subject = subject,

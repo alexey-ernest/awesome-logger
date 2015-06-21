@@ -14,6 +14,7 @@ namespace AwesomeLogger.Monitor
         private readonly string _pattern;
         private readonly string _emailToNotify;
         private readonly IMatchEventEmitter _matchEventEmitter;
+        private bool _isDisposed;
 
         public LogParser(string machineName, string filePath, string pattern, string emailToNotify, IMatchEventEmitter matchEventEmitter)
         {
@@ -38,6 +39,11 @@ namespace AwesomeLogger.Monitor
                     var lineNumber = 0;
                     while ((line = await file.ReadLineAsync()) != null)
                     {
+                        if (_isDisposed)
+                        {
+                            break;
+                        }
+
                         lineNumber++;
                         if (!regex.IsMatch(line))
                         {
@@ -46,23 +52,29 @@ namespace AwesomeLogger.Monitor
 
                         // emitting match event in parallel 
                         var match = line;
-                        NotifyInBackground(match, lineNumber);
+                        NotifyInBackground(_pattern, match, lineNumber);
                     }
                 }
             }
         }
 
-        private void NotifyInBackground(string match, int lineNumber)
+        private void NotifyInBackground(string pattern, string match, int lineNumber)
         {
             Task.Run(async () =>
                 await _matchEventEmitter.EmitAsync(new Dictionary<string, string>
                 {
                     {"MachineName", _machineName},
                     {"Path", _filePath},
+                    {"Pattern", pattern},
                     {"Match", match},
                     {"Line", lineNumber.ToString()},
                     {"Email", _emailToNotify}
                 }));
+        }
+
+        public void Dispose()
+        {
+            _isDisposed = true;
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace AwesomeLogger.Monitor
 {
-    internal interface ILogParser
+    internal interface ILogParser: IDisposable
     {
         Task ParseAsync();
     }

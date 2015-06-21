@@ -9,15 +9,17 @@ namespace AwesomeLogger.Monitor
 {
     internal class LogMonitor : ILogMonitor
     {
+        private readonly string _emailToNotify;
         private readonly IErrorEventEmitter _errorEventEmitter;
         private readonly string _filePath;
         private readonly string _machineName;
         private readonly IMatchEventEmitter _matchEventEmitter;
         private readonly string _pattern;
         private FileSystemWatcher _watcher;
-        private readonly string _emailToNotify;
+        private List<ILogParser> _parsers;
 
-        public LogMonitor(string machineName, string filePath, string pattern, string emailToNotify, IErrorEventEmitter errorEventEmitter,
+        public LogMonitor(string machineName, string filePath, string pattern, string emailToNotify,
+            IErrorEventEmitter errorEventEmitter,
             IMatchEventEmitter matchEventEmitter)
         {
             _machineName = machineName;
@@ -31,9 +33,17 @@ namespace AwesomeLogger.Monitor
         public void Dispose()
         {
             _watcher.Dispose();
+
+            if (_parsers != null)
+            {
+                foreach (var parser in _parsers)
+                {
+                    parser.Dispose();
+                }
+            }
         }
 
-        public async Task StartAsync()
+        public void Start()
         {
             try
             {
@@ -58,7 +68,7 @@ namespace AwesomeLogger.Monitor
                 _watcher.EnableRaisingEvents = true;
 
                 // Scan logs
-                await ScanAsync(_filePath);
+                _parsers = Scan(_filePath);
             }
             catch (Exception e)
             {
@@ -67,19 +77,19 @@ namespace AwesomeLogger.Monitor
             }
         }
 
-        private async Task ScanAsync(string path)
+        private List<ILogParser> Scan(string path)
         {
             var baseDir = Path.GetDirectoryName(path);
             if (string.IsNullOrEmpty(baseDir))
             {
-                return;
+                return new List<ILogParser>();
             }
 
             var filePattern = Path.GetFileName(path);
             if (!Directory.Exists(baseDir) && !File.Exists(baseDir))
             {
                 // path does not exist
-                return;
+                return new List<ILogParser>();
             }
 
             var attr = File.GetAttributes(baseDir);
@@ -90,41 +100,46 @@ namespace AwesomeLogger.Monitor
                 var files = di.GetFiles(filePattern, SearchOption.TopDirectoryOnly);
 
                 // scanning files
-                var scanningTasks = files.Select(fileInfo => ParseAsync(fileInfo.FullName)).ToList();
-                await Task.WhenAll(scanningTasks);
+                var parsers = files.Select(fileInfo => Parse(fileInfo.FullName)).ToList();
+                return parsers;
             }
-            else
-            {
-                // file
-                await ParseAsync(baseDir);
-            }
+
+            // file
+            return new List<ILogParser> {Parse(baseDir)};
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            ParseAsync(e.FullPath).Wait();
+            Parse(e.FullPath);
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            ParseAsync(e.FullPath).Wait();
+            Parse(e.FullPath);
         }
 
-        private async Task ParseAsync(string filePath)
+        private ILogParser Parse(string filePath)
         {
-            try
+            var parser = new LogParser(_machineName, filePath, _pattern, _emailToNotify, _matchEventEmitter);
+
+            // parsing in parallel
+            Task.Run(async () =>
             {
-                var parser = new LogParser(_machineName, filePath, _pattern, _emailToNotify, _matchEventEmitter);
-                await parser.ParseAsync();
-            }
-            catch (Exception ex)
-            {
-                _errorEventEmitter.EmitAsync(new Dictionary<string, string>
+                try
                 {
-                    {"MachineName", _machineName},
-                    {"Error", string.Format("Failed to parse log '{0}': {1}", _filePath, ex)}
-                }).Wait();
-            }
+                    await parser.ParseAsync();
+                }
+                catch (Exception ex)
+                {
+                    _errorEventEmitter.EmitAsync(new Dictionary<string, string>
+                    {
+                        {"MachineName", _machineName},
+                        {"Error", string.Format("Failed to parse log '{0}': {1}", _filePath, ex)}
+                    }).Wait();
+                }
+            });
+
+            return parser;
         }
     }
 }

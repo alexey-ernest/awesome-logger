@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace AwesomeLogger.Monitor
 {
-    internal interface ILogMonitor: IDisposable
+    internal interface ILogMonitor : IDisposable
     {
-        Task StartAsync();
+        void Start();
     }
 }
