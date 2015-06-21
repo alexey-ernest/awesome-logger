@@ -1,2 +1,2 @@
-# awesome-logger
-Enterprise log notification service
+# Awesome Logger
+Log monitoring and notification system.
