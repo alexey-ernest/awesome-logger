@@ -28,6 +28,7 @@ namespace AwesomeLogger.NotificationService.Startup
 
             container.RegisterType<INotificationManager, NotificationManager>();
             container.RegisterType<IEmailService, SendgridEmailService>();
+            container.RegisterType<IAuditService, AuditService>();
 
             // Initializers
             container.RegisterType<IDiagnosticsInitializer, DiagnosticsInitializer>(

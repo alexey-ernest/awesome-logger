@@ -175,6 +175,14 @@
     <Compile Include="Infrastructure\Filters\HttpExceptionHandlingAttribute.cs" />
     <Compile Include="Infrastructure\Filters\UnityFilterProvider.cs" />
     <Compile Include="Infrastructure\Filters\ValidationHttpAttribute.cs" />
+    <Compile Include="Migrations\201506211259170_Init.cs" />
+    <Compile Include="Migrations\201506211259170_Init.Designer.cs">
+      <DependentUpon>201506211259170_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506211310557_CreateIndices.cs" />
+    <Compile Include="Migrations\201506211310557_CreateIndices.Designer.cs">
+      <DependentUpon>201506211310557_CreateIndices.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -190,6 +198,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201506211259170_Init.resx">
+      <DependentUpon>201506211259170_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506211310557_CreateIndices.resx">
+      <DependentUpon>201506211310557_CreateIndices.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

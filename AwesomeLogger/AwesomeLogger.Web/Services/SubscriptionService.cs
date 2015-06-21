@@ -45,6 +45,7 @@ namespace AwesomeLogger.Web.Services
             {
                 throw new NotFoundException("Subscription does not exist.");
             }
+            response.EnsureSuccessStatusCode();
 
             var sub = await response.Content.ReadAsAsync<SubscriptionModel>();
             return sub;
@@ -80,6 +81,7 @@ namespace AwesomeLogger.Web.Services
             {
                 throw new NotFoundException("Subscription does not exist.");
             }
+            response.EnsureSuccessStatusCode();
 
             sub = await response.Content.ReadAsAsync<SubscriptionModel>();
             return sub;
@@ -98,6 +100,7 @@ namespace AwesomeLogger.Web.Services
             {
                 throw new NotFoundException("Subscription does not exist.");
             }
+            response.EnsureSuccessStatusCode();
         }
 
         #region helpers

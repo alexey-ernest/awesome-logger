@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,35 +31,56 @@ namespace AwesomeLogger.Monitor
 
         public async Task ParseAsync()
         {
-            // read file line by line
-            var regex = new Regex(_pattern);
-            using (
-                var fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1048576,
-                    FileOptions.Asynchronous))
+            var attemptsCount = 5;
+            while (true)
             {
-                using (var file = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
+                try
                 {
-                    string line;
-                    var lineNumber = 0;
-                    while ((line = await file.ReadLineAsync()) != null)
+                    // read file line by line
+                    var regex = new Regex(_pattern);
+                    using (
+                        var fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1048576,
+                            FileOptions.Asynchronous))
                     {
-                        if (_isDisposed)
+                        using (var file = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
                         {
-                            break;
-                        }
+                            string line;
+                            var lineNumber = 0;
+                            while ((line = await file.ReadLineAsync()) != null)
+                            {
+                                if (_isDisposed)
+                                {
+                                    break;
+                                }
 
-                        lineNumber++;
-                        if (!regex.IsMatch(line))
-                        {
-                            continue;
-                        }
+                                lineNumber++;
+                                if (!regex.IsMatch(line))
+                                {
+                                    continue;
+                                }
 
-                        // emitting match event in parallel 
-                        var match = line;
-                        NotifyInBackground(_pattern, match, lineNumber);
+                                // emitting match event in parallel 
+                                var match = line;
+                                NotifyInBackground(_pattern, match, lineNumber);
+                            }
+                        }
                     }
+
+                    break;
+                }
+                catch (Exception)
+                {
+                    if (attemptsCount == 0)
+                    {
+                        throw;
+                    }
+
+                    // trying again
+                    Task.Delay(30000).Wait();
+                    attemptsCount--;
                 }
             }
+            
         }
 
         public void Dispose()

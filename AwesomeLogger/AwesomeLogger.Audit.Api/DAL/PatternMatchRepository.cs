@@ -30,18 +30,16 @@ namespace AwesomeLogger.Audit.Api.DAL
                     _db.Matches.Where(
                         m => string.Equals(m.MachineName, matchPattern.MachineName, StringComparison.OrdinalIgnoreCase) &&
                              string.Equals(m.SearchPath, matchPattern.SearchPath) &&
-                             string.Equals(m.LogPath, matchPattern.LogPath) &&
                              string.Equals(m.Pattern, matchPattern.Pattern) &&
-                             m.Line == matchPattern.Line &&
                              string.Equals(m.Email, matchPattern.Email, StringComparison.OrdinalIgnoreCase) &&
+                             string.Equals(m.LogPath, matchPattern.LogPath) &&
+                             m.Line == matchPattern.Line &&
                              string.Equals(m.Match, matchPattern.Match)
                         ).FirstOrDefaultAsync();
             if (identical != null)
             {
                 throw new ConflictException("Pattern match with the same parameters already exists.");
             }
-
-            match.Created = DateTime.UtcNow;
 
             match = _db.Matches.Add(match);
             await _db.SaveChangesAsync();
@@ -56,7 +54,7 @@ namespace AwesomeLogger.Audit.Api.DAL
                                        string.Equals(m.SearchPath, searchPath) &&
                                        string.Equals(m.Pattern, pattern) &&
                                        string.Equals(m.Email, email, StringComparison.OrdinalIgnoreCase))
-                    .ToListAsync();
+                    .OrderByDescending(m => m.Created).ToListAsync();
         }
     }
 }
