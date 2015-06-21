@@ -27,6 +27,7 @@
         function ($scope, $stateParams, subscriptionService, auditService) {
 
             // PROPERTIES
+            $scope.id = $stateParams.id;
             $scope.items = [];
             $scope.filter = {
                 id: $stateParams.id,

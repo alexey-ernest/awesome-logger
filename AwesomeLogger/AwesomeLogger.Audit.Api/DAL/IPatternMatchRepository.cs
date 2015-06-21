@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AwesomeLogger.Audit.Api.DAL
@@ -8,6 +8,6 @@ namespace AwesomeLogger.Audit.Api.DAL
     {
         Task<PatternMatch> AddAsync(PatternMatch match);
 
-        Task<IEnumerable<PatternMatch>> GetRelatedAsync(string machine, string searchPath, string pattern, string email);
+        IQueryable<PatternMatch> Query(string machine, string searchPath, string pattern, string email);
     }
 }

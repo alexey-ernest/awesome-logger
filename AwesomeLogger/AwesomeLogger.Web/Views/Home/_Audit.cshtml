@@ -1,33 +1,25 @@
 ﻿<script type="text/ng-template" id="audit.html">
     
-    <p><a class="btn btn-default" ui-sref="^">Back</a></p>
+    <p><a href="" class="btn btn-default btn-lg" ui-sref="^.subscriptiondetails({id: id})">Back</a></p>
     <p>&nbsp;</p>
 
-    <h1>Subscriptions History</h1>
+    <h1>Subscription History</h1>
     
-    <table class="table" infinite-scroll="nextPage()">
+    <table class="table table-condensed text-left" infinite-scroll="nextPage()">
         <thead>
             <tr>
-                <th>Machine</th>
-                <th>Search Path</th>
                 <th>Log Path</th>
-                <th>Pattern</th>
-                <th>Line #</th>
-                <th>Email</th>
-                <th>Match Line</th>
-                <th>Date & Time</th>
+                <th>Line</th>
+                <th>Pattern Match</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="i in items">
-                <th scope="row">{{i.machineName}}</th>
-                <td>{{i.searchPath}}</td>
-                <td>{{i.logPath}}</td>
-                <td>{{i.pattern}}</td>
-                <td>{{i.line}}</td>
-                <td>{{i.email}}</td>
-                <td>{{i.match}}</td>
-                <td>{{i.created}}</td>
+                <td><span ng-bind="i.logPath | limitTo: 50" title="{{i.logPath}}"></span></td>
+                <td><span ng-bind="i.line"></span></td>
+                <td><span ng-bind="i.match"></span></td>
+                <td><span ng-bind="i.created | limitTo: 10" title="{{i.created | limitTo: 19}}" class="text-nowrap"></span></td>
             </tr>
         </tbody>
     </table>

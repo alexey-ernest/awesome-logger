@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AwesomeLogger.Audit.Api.Exceptions;
@@ -45,15 +44,15 @@ namespace AwesomeLogger.Audit.Api.DAL
             return match;
         }
 
-        public async Task<IEnumerable<PatternMatch>> GetRelatedAsync(string machine, string searchPath, string pattern,
+        public IQueryable<PatternMatch> Query(string machine, string searchPath, string pattern,
             string email)
         {
-            return await
+            return
                 _db.Matches.Where(m => m.MachineName == machine &&
                                        m.SearchPath == searchPath &&
                                        m.Pattern == pattern &&
                                        m.Email == email)
-                    .OrderByDescending(m => m.Created).ToListAsync();
+                    .OrderByDescending(m => m.Created);
         }
     }
 }

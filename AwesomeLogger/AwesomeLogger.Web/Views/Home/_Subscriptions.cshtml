@@ -5,7 +5,6 @@
     <h1>Subscriptions <a class="btn btn-default" ui-sref="^.subscriptioncreate"><i class="glyphicon glyphicon-plus"></i></a></h1>
     <div class="list-group" infinite-scroll="nextPage()">
             <a href="" ng-repeat="i in items" ui-sref="^.subscriptiondetails({id: i.id})" class="list-group-item">
-                <span class="badge">14</span>
                 Machine: <b>{{i.machineName}}</b>, log: <b>{{i.logPath}}</b> 
             </a>
     </div>
@@ -17,6 +16,9 @@
 </script>
 
 <script type="text/ng-template" id="subscriptions.details.html">
+    
+    <p><a href="" class="btn btn-default btn-lg" ui-sref="^.subscriptions">Back</a></p>
+    <p>&nbsp;</p>
 
     <h1>Subscription Details</h1>
 
@@ -25,7 +27,7 @@
 
             <div class="form-group">
                 <label for="machineName">@Html.DisplayNameFor(x => new SubscriptionModel().MachineName)</label>
-                <input type="text" class="form-control" id="machineName" placeholder="" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
+                <input type="text" class="form-control" id="machineName" placeholder="MyPC" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
             </div>
             
             <div class="form-group">
@@ -45,7 +47,6 @@
 
             <p>&nbsp;</p>
             <div class="form-group">
-                <a class="btn btn-default" ui-sref="^.subscriptions">&larr; Back</a>
                 <button type="submit" class="btn btn-primary" ng-disabled="itemForm.$invalid || item.$isLoading">
                     <span ng-if="item.$isLoading === undefined">Save</span>
                     <span ng-if="item.$isLoading === false"><i class="fa fa-check"></i> Saved</span>
@@ -72,6 +73,9 @@
 </script>
 
 <script type="text/ng-template" id="subscriptions.create.html">
+    
+    <p><a href="" class="btn btn-default btn-lg" ui-sref="^.subscriptions">Back</a></p>
+    <p>&nbsp;</p>
 
     <h1>New Subscription</h1>
 
@@ -80,7 +84,7 @@
 
             <div class="form-group">
                 <label for="machineName">@Html.DisplayNameFor(x => new SubscriptionModel().MachineName)</label>
-                <input type="text" class="form-control" id="machineName" placeholder="" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
+                <input type="text" class="form-control" id="machineName" placeholder="MyPC" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
             </div>
 
             <div class="form-group">
@@ -100,7 +104,6 @@
 
             <p>&nbsp;</p>
             <div class="form-group">
-                <a class="btn btn-default" ui-sref="^.subscriptions">&larr; Back</a>
                 <button type="submit" class="btn btn-primary" ng-disabled="itemForm.$invalid || item.$isLoading">
                     <span ng-if="item.$isLoading === undefined">Create</span>
                     <span ng-if="item.$isLoading === false"><i class="fa fa-check"></i> Created</span>

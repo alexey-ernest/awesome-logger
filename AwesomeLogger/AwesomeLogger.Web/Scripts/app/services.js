@@ -8,7 +8,7 @@
             return function (exception) {
 
                 var message = exception.message;
-                if (message === '[object Object]') {
+                if (!message || message === '[object Object]') {
                     message = 'Unknown Error';
                 }
 

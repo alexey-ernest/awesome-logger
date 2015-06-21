@@ -9,6 +9,7 @@ namespace AwesomeLogger.Web.Controllers
     {
         [Route("{id:int}")]
         [Route("new")]
+        [Route("audit/{*url}")]
         [Route(Name = RouteNames.HomeMvc)]
         public ActionResult Index()
         {

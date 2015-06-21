@@ -16,7 +16,7 @@ namespace AwesomeLogger.Web.Services
         public async Task<IEnumerable<PatternMatchModel>> SearchAsync(string machineName, string searchPath,
             string pattern, string email, int skip, int top)
         {
-            var url = string.Format("{0}?m={1}&s={2}&p={3}&e={4}&$skip={5}&$top={6}", _config.Get(SettingNames.AuditUri), machineName,
+            var url = string.Format("{0}?m={1}&s={2}&p={3}&e={4}&$skip={5}&$top={6}&$orderby=Created+desc", _config.Get(SettingNames.AuditUri), machineName,
                 searchPath, pattern, email, skip, top);
             var request = new HttpRequestMessage
             {
