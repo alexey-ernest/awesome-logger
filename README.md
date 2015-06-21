@@ -13,6 +13,9 @@ Software:
 * [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx)
 
 ## How to Build
+* Open `AwesomeLogger/AwesomeLogger.sln`
+* Resotre NuGet packages by clicking right button on solution: `Manage NuGet Packages for Solution...`, then click `Restore` button.
+* Right click on Solution: `Rebuild Solution`
 
 ## How to Install
 
