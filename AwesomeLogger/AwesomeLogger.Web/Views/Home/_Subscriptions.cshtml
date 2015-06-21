@@ -1,0 +1,107 @@
+﻿@using AwesomeLogger.Web.Infrastructure.Helpers
+@using AwesomeLogger.Web.Models
+<script type="text/ng-template" id="subscriptions.html">
+
+    <h1>Subscriptions <a class="btn btn-default" ui-sref="^.subscriptioncreate"><i class="glyphicon glyphicon-plus"></i></a></h1>
+    <div class="list-group" infinite-scroll="nextPage()">
+        <a href="" ng-repeat="i in items" ui-sref="^.subscriptiondetails({id: i.id})" class="list-group-item">
+           Machine: <b>{{i.machineName}}</b>, log: <b>{{i.logPath}}</b>
+        </a>
+    </div>
+
+    <div loader loader-if="isLoading"></div>
+
+    <p ng-if="items.length == 0 && !isLoading"><i>There are no subscriptions.</i></p>
+
+</script>
+
+<script type="text/ng-template" id="subscriptions.details.html">
+
+    <h1>Subscription Details</h1>
+
+    <div class="col-md-8 col-md-offset-2">
+        <form class="form-horizontal" ng-if="item" name="itemForm" ng-submit="update(itemForm, item)">
+
+            <div class="form-group">
+                <label for="machineName">@Html.DisplayNameFor(x => new SubscriptionModel().MachineName)</label>
+                <input type="text" class="form-control" id="machineName" placeholder="" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
+            </div>
+            
+            <div class="form-group">
+                <label for="logPath">@Html.DisplayNameFor(x => new SubscriptionModel().LogPath)</label>
+                <input type="text" class="form-control" id="logPath" placeholder="C:\logs\*.log" ng-model="item.logPath" @Html.RequiredFor(x => new SubscriptionModel().LogPath) />
+            </div>
+            
+            <div class="form-group">
+                <label for="pattern">@Html.DisplayNameFor(x => new SubscriptionModel().Pattern)</label>
+                <input type="text" class="form-control" id="pattern" placeholder="Error" ng-model="item.pattern" @Html.RequiredFor(x => new SubscriptionModel().Pattern) />
+            </div>
+            
+            <div class="form-group">
+                <label for="email">@Html.DisplayNameFor(x => new SubscriptionModel().Email)</label>
+                <input type="email" class="form-control" id="email" placeholder="awesome@yahoo.com" ng-model="item.email" @Html.RequiredFor(x => new SubscriptionModel().Email) />
+            </div>
+
+            <p>&nbsp;</p>
+            <div class="form-group">
+                <a class="btn btn-default" ui-sref="^.subscriptions">&larr; Back</a>
+                <button type="submit" class="btn btn-primary" ng-disabled="itemForm.$invalid || item.$isLoading">
+                    <span ng-if="item.$isLoading === undefined">Save</span>
+                    <span ng-if="item.$isLoading === false"><i class="fa fa-check"></i> Saved</span>
+                    <span ng-if="item.$isLoading === true"><i class="fa fa-spinner fa-spin"></i> Saving...</span>
+                </button>
+                <a href="#" class="btn btn-default" on-confirm-click confirm-click="delete(item)">Delete</a>
+            </div>
+
+        </form>
+
+        <div loader loader-if="!item && isLoading"></div>
+
+    </div>
+
+</script>
+
+<script type="text/ng-template" id="subscriptions.create.html">
+
+    <h1>New Subscription</h1>
+
+    <div class="col-md-8 col-md-offset-2">
+        <form class="form-horizontal" ng-if="item" name="itemForm" ng-submit="create(itemForm, item)">
+
+            <div class="form-group">
+                <label for="machineName">@Html.DisplayNameFor(x => new SubscriptionModel().MachineName)</label>
+                <input type="text" class="form-control" id="machineName" placeholder="" ng-model="item.machineName" @Html.RequiredFor(x => new SubscriptionModel().MachineName) />
+            </div>
+
+            <div class="form-group">
+                <label for="logPath">@Html.DisplayNameFor(x => new SubscriptionModel().LogPath)</label>
+                <input type="text" class="form-control" id="logPath" placeholder="C:\logs\*.log" ng-model="item.logPath" @Html.RequiredFor(x => new SubscriptionModel().LogPath) />
+            </div>
+
+            <div class="form-group">
+                <label for="pattern">@Html.DisplayNameFor(x => new SubscriptionModel().Pattern)</label>
+                <input type="text" class="form-control" id="pattern" placeholder="Error" ng-model="item.pattern" @Html.RequiredFor(x => new SubscriptionModel().Pattern) />
+            </div>
+
+            <div class="form-group">
+                <label for="email">@Html.DisplayNameFor(x => new SubscriptionModel().Email)</label>
+                <input type="email" class="form-control" id="email" placeholder="awesome@yahoo.com" ng-model="item.email" @Html.RequiredFor(x => new SubscriptionModel().Email) />
+            </div>
+
+            <p>&nbsp;</p>
+            <div class="form-group">
+                <a class="btn btn-default" ui-sref="^.subscriptions">&larr; Back</a>
+                <button type="submit" class="btn btn-primary" ng-disabled="itemForm.$invalid || item.$isLoading">
+                    <span ng-if="item.$isLoading === undefined">Create</span>
+                    <span ng-if="item.$isLoading === false"><i class="fa fa-check"></i> Created</span>
+                    <span ng-if="item.$isLoading === true"><i class="fa fa-spinner fa-spin"></i> Creating...</span>
+                </button>
+            </div>
+
+        </form>
+
+        <div loader loader-if="!item && isLoading"></div>
+
+    </div>
+
+</script>

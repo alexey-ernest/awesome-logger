@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Http.ModelBinding;
-using AwesomeLogger.Subscriptions.Api.DAL;
-using Microsoft.Practices.Unity;
 
 namespace AwesomeLogger.Subscriptions.Api.Infrastructure.Filters
 {
@@ -14,9 +12,6 @@ namespace AwesomeLogger.Subscriptions.Api.Infrastructure.Filters
     /// </summary>
     public sealed class ValidationHttpAttribute : ActionFilterAttribute
     {
-        [Dependency]
-        public ISubscriptionRepository SubscriptionRepository { get; set; }
-
         public ValidationHttpAttribute()
         {
             BadRequestText = "Bad request.";

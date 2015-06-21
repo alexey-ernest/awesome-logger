@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Filters;
 using AwesomeLogger.Subscriptions.Api;
-using AwesomeLogger.Subscriptions.Api.Infrastructure.Filters;
-using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.WebApi;
+using WebActivatorEx;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(UnityWebApiActivator), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(UnityWebApiActivator), "Shutdown")]
+[assembly: PreApplicationStartMethod(typeof (UnityWebApiActivator), "Start")]
+[assembly: ApplicationShutdownMethod(typeof (UnityWebApiActivator), "Shutdown")]
 
 namespace AwesomeLogger.Subscriptions.Api
 {
@@ -16,7 +12,7 @@ namespace AwesomeLogger.Subscriptions.Api
     public static class UnityWebApiActivator
     {
         /// <summary>Integrates Unity when the application starts.</summary>
-        public static void Start() 
+        public static void Start()
         {
             // Use UnityHierarchicalDependencyResolver if you want to use a new child container for each IHttpController resolution.
             // var resolver = new UnityHierarchicalDependencyResolver(UnityConfig.GetConfiguredContainer());

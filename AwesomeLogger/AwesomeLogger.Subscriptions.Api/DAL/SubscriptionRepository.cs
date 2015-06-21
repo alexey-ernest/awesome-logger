@@ -57,5 +57,17 @@ namespace AwesomeLogger.Subscriptions.Api.DAL
             await _db.SaveChangesAsync();
             return original;
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var sub = await GetAsync(id);
+            if (sub == null)
+            {
+                throw new NotFoundException("Subscription does not exist.");
+            }
+
+            _db.Subscriptions.Remove(sub);
+            await _db.SaveChangesAsync();
+        }
     }
 }

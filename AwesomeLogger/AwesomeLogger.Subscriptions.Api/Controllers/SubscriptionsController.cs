@@ -68,6 +68,7 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         {
             var sub = new Subscription
             {
+                Id = id,
                 MachineName = model.MachineName,
                 LogPath = model.LogPath,
                 Pattern = model.Pattern,
@@ -84,6 +85,23 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK, sub);
+            return response;
+        }
+
+        [AuthorizeInternal]
+        [Route("{id:int}")]
+        public async Task<HttpResponseMessage> Delete(int id)
+        {
+            try
+            {
+                await _db.DeleteAsync(id);
+            }
+            catch (NotFoundException)
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
 

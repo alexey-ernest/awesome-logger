@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using AwesomeLogger.Web.Constants;
 
 namespace AwesomeLogger.Web.Controllers
 {
+    [Authorize]
+    [RoutePrefix("")]
     public class HomeController : Controller
     {
+        [Route("{id:int}")]
+        [Route("new")]
+        [Route(Name = RouteNames.HomeMvc)]
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
-
             return View();
         }
     }
