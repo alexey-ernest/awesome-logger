@@ -63,7 +63,7 @@ namespace AwesomeLogger.NotificationService
                     var match = new PatternMatchModel
                     {
                         MachineName = string.Format("{0}", machineName),
-                        SearchPath = string.Format("{0}", searchPath),
+                        SearchPath =  string.Format("{0}", searchPath),
                         LogPath = string.Format("{0}", logPath),
                         Pattern = string.Format("{0}", pattern),
                         Line = lineNumber != null ? int.Parse(lineNumber.ToString()) : -1,
@@ -71,6 +71,12 @@ namespace AwesomeLogger.NotificationService
                         Match = string.Format("{0}", matchLine),
                         Created = dateTime
                     };
+
+                    // fixing missing fields
+                    if (string.IsNullOrEmpty(match.SearchPath))
+                    {
+                        match.SearchPath = match.LogPath;
+                    }
 
                     if (!AuditAsync(match).Result)
                     {

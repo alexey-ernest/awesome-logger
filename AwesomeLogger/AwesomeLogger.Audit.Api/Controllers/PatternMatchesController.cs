@@ -10,7 +10,6 @@ namespace AwesomeLogger.Audit.Api.Controllers
 {
     [AuthorizeInternal]
     [Authorize]
-    [ValidationHttp]
     public class PatternMatchesController : ApiController
     {
         private readonly IPatternMatchRepository _db;
@@ -20,6 +19,7 @@ namespace AwesomeLogger.Audit.Api.Controllers
             _db = db;
         }
 
+        [ValidationHttp]
         [Route("")]
         public async Task<HttpResponseMessage> Post(PatternMatch model)
         {
@@ -29,11 +29,11 @@ namespace AwesomeLogger.Audit.Api.Controllers
             return response;
         }
 
-        [Route("search?m={machine}&s={searchPath}&p={pattern}&e={email}")]
-        public async Task<IEnumerable<PatternMatch>> GetByMachine(string machine, string searchPath, string pattern, string email)
+        [Route("")]
+        public async Task<IEnumerable<PatternMatch>> Get(string m, string s, string p, string e)
         {
-            var subs = await _db.GetRelatedAsync(machine, searchPath, pattern, email);
-            return subs;
+            var matches = await _db.GetRelatedAsync(m, s, p, e);
+            return matches;
         }
     }
 }

@@ -114,3 +114,4 @@ UpgradeLog*.XML
 
 # App_Data
 AwesomeLogger/AwesomeLogger.Subscriptions.Api/App_Data/
+AwesomeLogger/AwesomeLogger.Audit.Api/App_Data/

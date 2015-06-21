@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,13 +27,13 @@ namespace AwesomeLogger.Audit.Api.DAL
             var identical =
                 await
                     _db.Matches.Where(
-                        m => string.Equals(m.MachineName, matchPattern.MachineName, StringComparison.OrdinalIgnoreCase) &&
-                             string.Equals(m.SearchPath, matchPattern.SearchPath) &&
-                             string.Equals(m.Pattern, matchPattern.Pattern) &&
-                             string.Equals(m.Email, matchPattern.Email, StringComparison.OrdinalIgnoreCase) &&
-                             string.Equals(m.LogPath, matchPattern.LogPath) &&
+                        m => m.MachineName == matchPattern.MachineName &&
+                             m.SearchPath == matchPattern.SearchPath &&
+                             m.Pattern == matchPattern.Pattern &&
+                             m.Email == matchPattern.Email &&
+                             m.LogPath == matchPattern.LogPath &&
                              m.Line == matchPattern.Line &&
-                             string.Equals(m.Match, matchPattern.Match)
+                             m.Match == matchPattern.Match
                         ).FirstOrDefaultAsync();
             if (identical != null)
             {
@@ -50,10 +49,10 @@ namespace AwesomeLogger.Audit.Api.DAL
             string email)
         {
             return await
-                _db.Matches.Where(m => string.Equals(m.MachineName, machine, StringComparison.OrdinalIgnoreCase) &&
-                                       string.Equals(m.SearchPath, searchPath) &&
-                                       string.Equals(m.Pattern, pattern) &&
-                                       string.Equals(m.Email, email, StringComparison.OrdinalIgnoreCase))
+                _db.Matches.Where(m => m.MachineName == machine &&
+                                       m.SearchPath == searchPath &&
+                                       m.Pattern == pattern &&
+                                       m.Email == email)
                     .OrderByDescending(m => m.Created).ToListAsync();
         }
     }
