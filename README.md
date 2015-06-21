@@ -38,12 +38,12 @@ Specify settings in `App.config`:
 
 Install as a Console Application
 * Copy all files from `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release` to server machine.
-* Run `AwesomeLogger.ErrorHandlingService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+* Run `AwesomeLogger.ErrorHandlingService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 
 Install as a Windows Service
 * Open `Command Prompt` under Administator account.
 * Go to `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release\Install` directory
-* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Error-Handling Service` should have `Running` status.
 
 ### Installing Notification service
@@ -55,22 +55,34 @@ Specify settings in `App.config`:
 * `SendgridPassword` - SendGrid account password.
 * `AuditUri` - address of the [Audit API](#audit-api) service.
 
-Install as Console Application
+Install as a Console Application
 * Copy all files from `AwesomeLogger\AwesomeLogger.NotificationService\bin\Release` to server machine.
-* Run `AwesomeLogger.NotificationService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+* Run `AwesomeLogger.NotificationService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 
-Install as Windows Service
+Install as a Windows Service
 * Open `Command Prompt` under Administator account.
 * Go to `AwesomeLogger\AwesomeLogger.NotificationService\bin\Release\Install` directory
-* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Notification Service` should have `Running` status.
 
 ### Installing Monitor service
 This service should be installed on each client machine running Windows.
 
-#### Install as Console Application
+Specify settings in `App.config`:
+* `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
+* `SubscriptionsUri` - address of the [Subscriptions API](#subscriptions-api) service.
 
-#### Install as Windows Service
+Install as a Console Application
+* Copy all files from `AwesomeLogger\AwesomeLogger.Monitor\bin\Release` to server machine.
+* Run `AwesomeLogger.Monitor.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
+
+Install as a Windows Service
+* Open `Command Prompt` under Administator account.
+* Go to `AwesomeLogger\AwesomeLogger.Monitor\bin\Release\Install` directory
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
+* Windows service `AwesomeLogger Monitor Service` should have `Running` status.
+
+
 
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
