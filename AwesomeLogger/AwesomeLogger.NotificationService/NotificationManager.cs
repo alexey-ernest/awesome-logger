@@ -34,6 +34,9 @@ namespace AwesomeLogger.NotificationService
                     object machineName;
                     message.Properties.TryGetValue("MachineName", out machineName);
 
+                    object searchPath;
+                    message.Properties.TryGetValue("SearchPath", out searchPath);
+
                     object logPath;
                     message.Properties.TryGetValue("Path", out logPath);
 
@@ -49,16 +52,21 @@ namespace AwesomeLogger.NotificationService
                     object email;
                     message.Properties.TryGetValue("Email", out email);
 
+                    var dateTime = message.EnqueuedTimeUtc;
+
                     // todo: filter duplicates
 
                     // Logging
                     var body = string.Format("Pattern match found.\n\n" +
                                              "Machine: {0}\n" +
-                                             "Path: {1}\n" +
-                                             "Pattern: {2}\n" +
-                                             "Line number: {3}\n" +
-                                             "Match: {4}\n" +
-                                             "Email: {5}", machineName, logPath, pattern, lineNumber, matchLine, email);
+                                             "Search Path: {1}\n" +
+                                             "Log Path: {2}\n" +
+                                             "Pattern: {3}\n" +
+                                             "Line number: {4}\n" +
+                                             "Match: {5}\n" +
+                                             "Email: {6}\n" + 
+                                             "Date and Time: {7}", 
+                                             machineName, searchPath, logPath, pattern, lineNumber, matchLine, email, dateTime);
                     Trace.TraceInformation(body);
 
                     // Sending email notification
@@ -67,10 +75,13 @@ namespace AwesomeLogger.NotificationService
                         var notificationAddress = _config.Get(SettingNames.NotificationAddress);
                         var subject = string.Format("AwesomeLogger match found on machine {0}", machineName);
                         var htmlBody = string.Format("Machine: {0}<br /><br />" +
-                                             "Path: {1}<br /><br />" +
-                                             "Pattern: {2}<br /><br />" +
-                                             "Line number: {3}<br /><br />" +
-                                             "Match: {4}", machineName, logPath, pattern, lineNumber, matchLine);
+                                             "Search Path: {1}<br /><br />" +
+                                             "Log Path: {2}<br /><br />" +
+                                             "Pattern: {3}<br /><br />" +
+                                             "Line number: {4}<br /><br />" +
+                                             "Match: {5}<br /><br />" +
+                                             "Date and Time: {6}", 
+                                             machineName, searchPath, logPath, pattern, lineNumber, matchLine, dateTime);
                         var msg = new MailMessage
                         {
                             Subject = subject,

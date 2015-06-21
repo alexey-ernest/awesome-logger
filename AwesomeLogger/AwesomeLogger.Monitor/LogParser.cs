@@ -9,16 +9,19 @@ namespace AwesomeLogger.Monitor
 {
     internal class LogParser : ILogParser
     {
+        private readonly string _emailToNotify;
         private readonly string _filePath;
         private readonly string _machineName;
-        private readonly string _pattern;
-        private readonly string _emailToNotify;
         private readonly IMatchEventEmitter _matchEventEmitter;
+        private readonly string _pattern;
+        private readonly string _searchPath;
         private bool _isDisposed;
 
-        public LogParser(string machineName, string filePath, string pattern, string emailToNotify, IMatchEventEmitter matchEventEmitter)
+        public LogParser(string machineName, string searchPath, string filePath, string pattern, string emailToNotify,
+            IMatchEventEmitter matchEventEmitter)
         {
             _filePath = filePath;
+            _searchPath = searchPath;
             _pattern = pattern;
             _matchEventEmitter = matchEventEmitter;
             _emailToNotify = emailToNotify;
@@ -58,23 +61,24 @@ namespace AwesomeLogger.Monitor
             }
         }
 
+        public void Dispose()
+        {
+            _isDisposed = true;
+        }
+
         private void NotifyInBackground(string pattern, string match, int lineNumber)
         {
             Task.Run(async () =>
                 await _matchEventEmitter.EmitAsync(new Dictionary<string, string>
                 {
                     {"MachineName", _machineName},
+                    {"SearchPath", _searchPath},
                     {"Path", _filePath},
                     {"Pattern", pattern},
                     {"Match", match},
                     {"Line", lineNumber.ToString()},
                     {"Email", _emailToNotify}
                 }));
-        }
-
-        public void Dispose()
-        {
-            _isDisposed = true;
         }
     }
 }

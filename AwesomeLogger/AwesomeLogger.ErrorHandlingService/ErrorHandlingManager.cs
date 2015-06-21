@@ -34,10 +34,14 @@ namespace AwesomeLogger.ErrorHandlingService
                     object error;
                     message.Properties.TryGetValue("Error", out error);
 
+                    var dateTime = message.EnqueuedTimeUtc;
+
                     // Logging
                     var body = string.Format("AwesomeLogger Error.\n\n" +
                                              "Machine: {0}\n" +
-                                             "Error: {1}\n", machineName, error);
+                                             "Error: {1}\n" +
+                                             "Date and Time: {2}\n", 
+                                             machineName, error, dateTime);
                     Trace.TraceInformation(body);
 
                     message.Complete();

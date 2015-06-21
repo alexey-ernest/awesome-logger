@@ -11,9 +11,9 @@ namespace AwesomeLogger.Monitor
             _matchEventEmitter = matchEventEmitter;
         }
 
-        public ILogParser Create(string machineName, string filePath, string pattern, string email)
+        public ILogParser Create(string machineName, string searchPath, string filePath, string pattern, string email)
         {
-            return new LogParser(machineName, filePath, pattern, email, _matchEventEmitter);
+            return new LogParser(machineName, searchPath, filePath, pattern, email, _matchEventEmitter);
         }
     }
 }

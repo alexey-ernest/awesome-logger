@@ -11,18 +11,18 @@ namespace AwesomeLogger.Monitor
     {
         private readonly string _emailToNotify;
         private readonly IErrorEventEmitter _errorEventEmitter;
-        private readonly string _filePath;
+        private readonly string _searchPath;
         private readonly string _machineName;
         private readonly string _pattern;
         private readonly ILogParserFactory _logParserFactory;
         private FileSystemWatcher _watcher;
         private List<ILogParser> _parsers;
 
-        public LogMonitor(string machineName, string filePath, string pattern, string emailToNotify,
+        public LogMonitor(string machineName, string searchPath, string pattern, string emailToNotify,
             IErrorEventEmitter errorEventEmitter, ILogParserFactory logParserFactory)
         {
             _machineName = machineName;
-            _filePath = filePath;
+            _searchPath = searchPath;
             _pattern = pattern;
             _errorEventEmitter = errorEventEmitter;
             _logParserFactory = logParserFactory;
@@ -46,8 +46,8 @@ namespace AwesomeLogger.Monitor
         {
             try
             {
-                var path = Path.GetDirectoryName(_filePath);
-                var file = Path.GetFileName(_filePath);
+                var path = Path.GetDirectoryName(_searchPath);
+                var file = Path.GetFileName(_searchPath);
 
                 _watcher = new FileSystemWatcher
                 {
@@ -67,12 +67,12 @@ namespace AwesomeLogger.Monitor
                 _watcher.EnableRaisingEvents = true;
 
                 // Scan logs
-                _parsers = Scan(_filePath);
+                _parsers = Scan(_searchPath);
             }
             catch (Exception e)
             {
                 throw new ApplicationException(string.Format("Monitoring error for log '{0}' with pattern '{1}': {2}",
-                    _filePath, _pattern, e));
+                    _searchPath, _pattern, e));
             }
         }
 
@@ -119,7 +119,7 @@ namespace AwesomeLogger.Monitor
 
         private ILogParser Parse(string filePath)
         {
-            var parser = _logParserFactory.Create(_machineName, filePath, _pattern, _emailToNotify);
+            var parser = _logParserFactory.Create(_machineName, _searchPath, filePath, _pattern, _emailToNotify);
 
             // parsing in parallel
             Task.Run(async () =>
@@ -133,7 +133,7 @@ namespace AwesomeLogger.Monitor
                     _errorEventEmitter.EmitAsync(new Dictionary<string, string>
                     {
                         {"MachineName", _machineName},
-                        {"Error", string.Format("Failed to parse log '{0}': {1}", _filePath, ex)}
+                        {"Error", string.Format("Failed to parse log '{0}': {1}", _searchPath, ex)}
                     }).Wait();
                 }
             });
