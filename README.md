@@ -41,9 +41,9 @@ Install as Console Application
 * Run `AwesomeLogger.ErrorHandlingService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
 
 Install as Windows Service
-* Open `Command Line` under Administator account.
+* Open `Command Prompt` under Administator account.
 * Go to `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release\Install` directory
-* `> install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to servie bus. For testing pupose you can run service under **current user** account.
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to servie bus. For testing pupose you can run service under **current user** account.
 * Windows service `AwesomeLogger Error-Handling Service` should have `Running` status.
 
 ### Installing Notification service
