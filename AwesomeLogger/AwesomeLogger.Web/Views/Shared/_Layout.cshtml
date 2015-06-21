@@ -12,9 +12,13 @@
     <div class="container body-content">
         <a href="/" class="brand">Awesome Logger</a>
         @RenderBody()
-        <footer class="footer">
-            <p>&copy; @DateTime.Now.Year Melnikov Alexey. Source code available on <a href="https://github.com/alexey-ernest/awesome-logger" target="_blank">GitHub</a>.</p>
-        </footer>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <footer class="footer">
+                    <p>&copy; @DateTime.Now.Year Melnikov Alexey. Source code available on <a href="https://github.com/alexey-ernest/awesome-logger" target="_blank">GitHub</a>.</p>
+                </footer>
+            </div>
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

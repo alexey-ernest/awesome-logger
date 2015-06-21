@@ -111,7 +111,7 @@ namespace AwesomeLogger.Web.Services
             {
                 // set auth header
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                    _config.Get(SettingNames.AccessToken));
+                    _config.Get(SettingNames.SubscriptionsAccessToken));
 
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

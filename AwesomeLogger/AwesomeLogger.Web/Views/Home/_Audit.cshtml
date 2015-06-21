@@ -1,0 +1,39 @@
+﻿<script type="text/ng-template" id="audit.html">
+    
+    <p><a class="btn btn-default" ui-sref="^">Back</a></p>
+    <p>&nbsp;</p>
+
+    <h1>Subscriptions History</h1>
+    
+    <table class="table" infinite-scroll="nextPage()">
+        <thead>
+            <tr>
+                <th>Machine</th>
+                <th>Search Path</th>
+                <th>Log Path</th>
+                <th>Pattern</th>
+                <th>Line #</th>
+                <th>Email</th>
+                <th>Match Line</th>
+                <th>Date & Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="i in items">
+                <th scope="row">{{i.machineName}}</th>
+                <td>{{i.searchPath}}</td>
+                <td>{{i.logPath}}</td>
+                <td>{{i.pattern}}</td>
+                <td>{{i.line}}</td>
+                <td>{{i.email}}</td>
+                <td>{{i.match}}</td>
+                <td>{{i.created}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div loader loader-if="isLoading"></div>
+
+    <p ng-if="items.length == 0 && !isLoading"><i>There are no records yet.</i></p>
+
+</script>

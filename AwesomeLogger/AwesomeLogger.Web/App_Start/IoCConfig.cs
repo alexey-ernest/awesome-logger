@@ -39,6 +39,8 @@ namespace AwesomeLogger.Web
 
             container.RegisterType<ISubscriptionService, SubscriptionService>(
                 new ContainerControlledLifetimeManager());
+            container.RegisterType<IAuditService, AuditService>(
+                new ContainerControlledLifetimeManager());
         }
     }
 }

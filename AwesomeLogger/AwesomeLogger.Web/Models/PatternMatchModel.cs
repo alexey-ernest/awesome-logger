@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace AwesomeLogger.NotificationService.Models
+namespace AwesomeLogger.Web.Models
 {
-    internal class PatternMatchModel
+    public class PatternMatchModel
     {
         public DateTime Created { get; set; }
 

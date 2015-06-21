@@ -99,4 +99,33 @@
             };
         }
     ]);
+
+    module.factory('auditService', [
+            '$resource', '$q', function ($resource, $q) {
+
+                var url = '/api/audit/';
+                var resource = $resource(url + '/:id',
+                { id: '@id' },
+                {
+                    update: { method: 'PUT' }
+                });
+
+                return {
+                    query: function (params) {
+
+                        params = params || {};
+
+                        var deferred = $q.defer();
+                        resource.query(params, function (data) {
+                            deferred.resolve(data);
+                        }, function () {
+                            deferred.reject();
+                        });
+
+                        return deferred.promise;
+                    }
+                };
+            }
+    ]);
+
 })(window, window.angular);

@@ -5,7 +5,8 @@
         'directives',
         'ui.router', // for ui routing
         'infinite-scroll', // for auto-scrolling
-        'app.subscriptions'
+        'app.subscriptions',
+        'app.audit'
     ]);
 
     // Third party libraries

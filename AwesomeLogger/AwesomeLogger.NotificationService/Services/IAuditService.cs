@@ -3,7 +3,7 @@ using AwesomeLogger.NotificationService.Models;
 
 namespace AwesomeLogger.NotificationService.Services
 {
-    public interface IAuditService
+    internal interface IAuditService
     {
         Task AddAsync(PatternMatchModel match);
     }
