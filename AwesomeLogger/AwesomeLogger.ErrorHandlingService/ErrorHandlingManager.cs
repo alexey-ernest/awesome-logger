@@ -42,7 +42,7 @@ namespace AwesomeLogger.ErrorHandlingService
                                              "Error: {1}\n" +
                                              "Date and Time: {2}\n", 
                                              machineName, error, dateTime);
-                    Trace.TraceInformation(body);
+                    Trace.TraceError(body);
 
                     message.Complete();
                 }

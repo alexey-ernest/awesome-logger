@@ -31,7 +31,10 @@ namespace AwesomeLogger.Monitor
 
         public void Dispose()
         {
-            _watcher.Dispose();
+            if (_watcher != null)
+            {
+                _watcher.Dispose();        
+            }
 
             if (_parsers != null)
             {
@@ -86,12 +89,6 @@ namespace AwesomeLogger.Monitor
             }
 
             var filePattern = Path.GetFileName(path);
-            if (!Directory.Exists(baseDir) && !File.Exists(baseDir))
-            {
-                // path does not exist
-                return;
-            }
-
             var attr = File.GetAttributes(baseDir);
             if (attr.HasFlag(FileAttributes.Directory))
             {
