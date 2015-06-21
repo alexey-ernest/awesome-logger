@@ -34,9 +34,18 @@ namespace AwesomeLogger.NotificationService
                 Task.Delay(60000).Wait();
                 Start();
             }
+            catch (UnauthorizedAccessException e)
+            {
+                Trace.TraceWarning("Failed to connect: {0}", e);
+
+                // trying to connect again
+                Task.Delay(60000).Wait();
+                Start();
+            }
             catch (Exception e)
             {
                 Trace.TraceError("Could not start {0}: {1}", ServicePrintName, e);
+                Stop();
             }
         }
 

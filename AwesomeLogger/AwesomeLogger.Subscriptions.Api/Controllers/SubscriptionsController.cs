@@ -107,10 +107,10 @@ namespace AwesomeLogger.Subscriptions.Api.Controllers
         }
 
         [AuthorizeExternal]
-        [Route("machine/{machine}")]
-        public async Task<IEnumerable<Subscription>> GetByMachine(string machine)
+        [Route("machine/{name}")]
+        public async Task<IEnumerable<Subscription>> GetByMachine(string name)
         {
-            var subs = await _db.GetByMachineAsync(machine);
+            var subs = await _db.GetByMachineAsync(name);
             return subs;
         }
     }

@@ -70,6 +70,11 @@
                 filterItems();
             };
 
+            $scope.reload = function() {
+                $scope.filter.skip = 0;
+                filterItems();
+            }
+
             function load() {
                 filterItems();
             }

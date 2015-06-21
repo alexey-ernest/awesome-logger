@@ -59,7 +59,10 @@ namespace AwesomeLogger.ErrorHandlingService
 
         public void Dispose()
         {
-            _client.Close();
+            if (_client != null)
+            {
+                _client.Close();
+            }
         }
     }
 }

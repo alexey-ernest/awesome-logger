@@ -106,7 +106,10 @@ namespace AwesomeLogger.NotificationService
 
         public void Dispose()
         {
-            _client.Close();
+            if (_client != null)
+            {
+                _client.Close();
+            }
         }
 
         private async Task<bool> AuditAsync(PatternMatchModel match)

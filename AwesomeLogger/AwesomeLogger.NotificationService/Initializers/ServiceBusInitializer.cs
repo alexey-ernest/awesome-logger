@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using AwesomeLogger.NotificationService.Configuration;
+﻿using AwesomeLogger.NotificationService.Configuration;
 using Microsoft.ServiceBus;
 
 namespace AwesomeLogger.NotificationService.Initializers
@@ -16,25 +14,19 @@ namespace AwesomeLogger.NotificationService.Initializers
 
         public void Initialize()
         {
-            try
+            var namespaceManager =
+                NamespaceManager.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString));
+
+            var notifyTopic = _config.Get(SettingNames.ServiceBusNotifyTopic);
+            if (!namespaceManager.TopicExists(notifyTopic))
             {
-                var namespaceManager = NamespaceManager.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString));
-
-                var notifyTopic = _config.Get(SettingNames.ServiceBusNotifyTopic);
-                if (!namespaceManager.TopicExists(notifyTopic))
-                {
-                    namespaceManager.CreateTopic(notifyTopic);
-                }
-
-                var notifyChannel = _config.Get(SettingNames.ServiceBusNotifyChannel);
-                if (!namespaceManager.SubscriptionExists(notifyTopic, notifyChannel))
-                {
-                    namespaceManager.CreateSubscription(notifyTopic, notifyChannel);
-                }
+                namespaceManager.CreateTopic(notifyTopic);
             }
-            catch (Exception e)
+
+            var notifyChannel = _config.Get(SettingNames.ServiceBusNotifyChannel);
+            if (!namespaceManager.SubscriptionExists(notifyTopic, notifyChannel))
             {
-                Trace.TraceError("Could not initialize service bus: {0}", e);
+                namespaceManager.CreateSubscription(notifyTopic, notifyChannel);
             }
         }
     }

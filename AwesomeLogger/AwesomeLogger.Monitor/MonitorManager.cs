@@ -102,19 +102,23 @@ namespace AwesomeLogger.Monitor
             catch (Exception e)
             {
                 var msg = string.Format("Failed to start monitoring: {0}", e);
-                Trace.TraceError(msg);
-
                 _errorEventEmitter.EmitAsync(new Dictionary<string, string>
                 {
                     {"MachineName", _config.GetMachineName()},
                     {"Error", msg}
                 }).Wait();
+
+                throw;
             }
         }
 
         public void Dispose()
         {
-            _client.Close();
+            if (_client != null)
+            {
+                _client.Close();    
+            }
+            
             StopMonitoring();
         }
 

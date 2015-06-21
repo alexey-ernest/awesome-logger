@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,7 +31,7 @@ namespace AwesomeLogger.Monitor
 
         public async Task ParseAsync()
         {
-            var attemptsCount = 5;
+            var attemptNumber = 1;
             while (true)
             {
                 try
@@ -68,16 +68,17 @@ namespace AwesomeLogger.Monitor
 
                     break;
                 }
-                catch (Exception)
+                catch (IOException)
                 {
-                    if (attemptsCount == 0)
+                    if (attemptNumber > 10)
                     {
                         throw;
                     }
 
                     // trying again
-                    Task.Delay(30000).Wait();
-                    attemptsCount--;
+                    Trace.TraceWarning("Failed to open log file '{0}'. Attempt #{1}.", _filePath, attemptNumber);
+                    Task.Delay(60000).Wait();
+                    attemptNumber++;
                 }
             }
             

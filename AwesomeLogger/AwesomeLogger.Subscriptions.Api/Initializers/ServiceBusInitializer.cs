@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using AwesomeLogger.Subscriptions.Api.Infrastructure.Configuration;
+﻿using AwesomeLogger.Subscriptions.Api.Infrastructure.Configuration;
 using Microsoft.ServiceBus;
 
 namespace AwesomeLogger.Subscriptions.Api.Initializers
@@ -16,20 +14,13 @@ namespace AwesomeLogger.Subscriptions.Api.Initializers
 
         public void Initialize()
         {
-            try
-            {
-                var namespaceManager =
-                    NamespaceManager.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString));
+            var namespaceManager =
+                NamespaceManager.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString));
 
-                var subscriptionTopic = _config.Get(SettingNames.ServiceBusSubscriptionTopic);
-                if (!namespaceManager.TopicExists(subscriptionTopic))
-                {
-                    namespaceManager.CreateTopic(subscriptionTopic);
-                }
-            }
-            catch (Exception e)
+            var subscriptionTopic = _config.Get(SettingNames.ServiceBusSubscriptionTopic);
+            if (!namespaceManager.TopicExists(subscriptionTopic))
             {
-                Trace.TraceError("Could not initialize service bus: {0}", e);
+                namespaceManager.CreateTopic(subscriptionTopic);
             }
         }
     }

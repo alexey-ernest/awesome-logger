@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 using AwesomeLogger.Monitor.Startup;
 using Microsoft.Practices.Unity;
+using Microsoft.ServiceBus.Messaging;
 
 namespace AwesomeLogger.Monitor
 {
@@ -24,9 +26,26 @@ namespace AwesomeLogger.Monitor
                 _monitorManager = container.Resolve<IMonitorManager>();
                 _monitorManager.Start();
             }
+            catch (MessagingCommunicationException e)
+            {
+                Trace.TraceWarning("Failed to connect to ServiceBus: {0}", e);
+
+                // trying to connect again
+                Task.Delay(60000).Wait();
+                Start();
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Trace.TraceWarning("Failed to connect: {0}", e);
+
+                // trying to connect again
+                Task.Delay(60000).Wait();
+                Start();
+            }
             catch (Exception e)
             {
                 Trace.TraceError("Could not start {0}: {1}", ServicePrintName, e);
+                Stop();
             }
         }
 

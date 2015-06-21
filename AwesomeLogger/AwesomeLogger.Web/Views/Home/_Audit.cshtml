@@ -3,7 +3,7 @@
     <p><a href="" class="btn btn-default btn-lg" ui-sref="^.subscriptiondetails({id: id})">Back</a></p>
     <p>&nbsp;</p>
 
-    <h1>Subscription History</h1>
+    <h1>Subscription History <a href="" class="btn btn-success btn-lg" ng-click="reload()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a></h1>
     
     <table class="table table-condensed text-left" infinite-scroll="nextPage()">
         <thead>
@@ -11,7 +11,7 @@
                 <th>Log Path</th>
                 <th>Line</th>
                 <th>Pattern Match</th>
-                <th>Date</th>
+                <th>Time</th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
                 <td><span ng-bind="i.logPath | limitTo: 50" title="{{i.logPath}}"></span></td>
                 <td><span ng-bind="i.line"></span></td>
                 <td><span ng-bind="i.match"></span></td>
-                <td><span ng-bind="i.created | limitTo: 10" title="{{i.created | limitTo: 19}}" class="text-nowrap"></span></td>
+                <td><span ng-bind="i.created.substr(11, 8)" title="{{i.created | limitTo: 19}}" class="text-nowrap"></span></td>
             </tr>
         </tbody>
     </table>
