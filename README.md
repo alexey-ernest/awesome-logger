@@ -34,24 +34,36 @@ Take a look at the instructions provided by [Microsoft](https://msdn.microsoft.c
 This service should be installed on server machine. Service can bee scaled horizontally by installing on additional machines, since all services connected to the same service bus, they will work together to serve incoming messages.
 
 Specify settings in `App.config`:
-* 
+* `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
 
-Install as Console Application
+Install as a Console Application
 * Copy all files from `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release` to server machine.
 * Run `AwesomeLogger.ErrorHandlingService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
 
-Install as Windows Service
+Install as a Windows Service
 * Open `Command Prompt` under Administator account.
 * Go to `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release\Install` directory
-* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to servie bus. For testing pupose you can run service under **current user** account.
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
 * Windows service `AwesomeLogger Error-Handling Service` should have `Running` status.
 
 ### Installing Notification service
 This service should be installed on server machine. Service can bee scaled horizontally by installing on additional machines, since all services connected to the same service bus, they will work together to serve incoming messages.
 
-#### Install as Console Application
+Specify settings in `App.config`:
+* `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
+* `SendgridUsername` - [SendGrid](https://sendgrid.com/) account username if you want to send email notifications.
+* `SendgridPassword` - SendGrid account password.
+* `AuditUri` - address of the [Audit API](#audit-api) service.
 
-#### Install as Windows Service
+Install as Console Application
+* Copy all files from `AwesomeLogger\AwesomeLogger.NotificationService\bin\Release` to server machine.
+* Run `AwesomeLogger.NotificationService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+
+Install as Windows Service
+* Open `Command Prompt` under Administator account.
+* Go to `AwesomeLogger\AwesomeLogger.NotificationService\bin\Release\Install` directory
+* Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+* Windows service `AwesomeLogger Notification Service` should have `Running` status.
 
 ### Installing Monitor service
 This service should be installed on each client machine running Windows.
