@@ -2,16 +2,16 @@
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
-using AwesomeLogger.NotificationService.Startup;
+using AwesomeLogger.ErrorHandlingService.Startup;
 using Microsoft.Practices.Unity;
 using Microsoft.ServiceBus.Messaging;
 
-namespace AwesomeLogger.NotificationService
+namespace AwesomeLogger.ErrorHandlingService
 {
     internal class Program
     {
-        private const string ServicePrintName = "AwesomeLogger Notification Service";
-        private static INotificationManager _notificationManager;
+        private const string ServicePrintName = "AwesomeLogger Error-Handling Service";
+        private static IErrorHandlingManager _errorManager;
 
         public static void Start()
         {
@@ -23,8 +23,8 @@ namespace AwesomeLogger.NotificationService
                 Trace.TraceInformation("{0} started.", ServicePrintName);
 
                 // Process messages
-                _notificationManager = container.Resolve<INotificationManager>();
-                _notificationManager.Start();
+                _errorManager = container.Resolve<IErrorHandlingManager>();
+                _errorManager.Start();
             }
             catch (MessagingCommunicationException e)
             {
@@ -43,7 +43,7 @@ namespace AwesomeLogger.NotificationService
         public static void Stop()
         {
             Trace.TraceInformation("{0} stopped.", ServicePrintName);
-            _notificationManager.Dispose();
+            _errorManager.Dispose();
         }
 
         private static void Main()
@@ -51,7 +51,7 @@ namespace AwesomeLogger.NotificationService
             if (!Environment.UserInteractive)
             {
                 // Windows service
-                using (var service = new NotificationService())
+                using (var service = new ErrorHandlingService())
                 {
                     ServiceBase.Run(service);
                 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AwesomeLogger.NotificationService.Initializers;
+using AwesomeLogger.ErrorHandlingService.Initializers;
 using Microsoft.Practices.Unity;
 
-namespace AwesomeLogger.NotificationService.Startup
+namespace AwesomeLogger.ErrorHandlingService.Startup
 {
     public static class InitializersConfig
     {

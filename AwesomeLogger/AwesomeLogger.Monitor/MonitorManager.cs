@@ -16,6 +16,7 @@ namespace AwesomeLogger.Monitor
         private readonly IMatchEventEmitter _matchEventEmitter;
         private readonly List<ILogMonitor> _monitors = new List<ILogMonitor>();
         private readonly ISubscriptionServiceClient _service;
+        private SubscriptionClient _client;
 
         public MonitorManager(ISubscriptionServiceClient service, IConfigurationProvider config,
             IErrorEventEmitter errorEventEmitter, IMatchEventEmitter matchEventEmitter)
@@ -34,12 +35,12 @@ namespace AwesomeLogger.Monitor
                 StartMonitoring();
 
                 // Process messages
-                var serviceBusClient =
+                _client =
                     SubscriptionClient.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString),
                         _config.Get(SettingNames.ServiceBusSubscriptionTopic),
                         _config.GetMachineName());
 
-                serviceBusClient.OnMessage(message =>
+                _client.OnMessage(message =>
                 {
                     try
                     {
@@ -52,7 +53,7 @@ namespace AwesomeLogger.Monitor
                         var machineName = message.Properties["MachineName"].ToString();
                         if (!string.Equals(machineName, _config.GetMachineName(), StringComparison.OrdinalIgnoreCase))
                         {
-                            // skipping messages not for us
+                            // skipping messages not for us (only in our channel)
                             message.Complete();
                         }
 
@@ -113,6 +114,7 @@ namespace AwesomeLogger.Monitor
 
         public void Dispose()
         {
+            _client.Close();
             StopMonitoring();
         }
 

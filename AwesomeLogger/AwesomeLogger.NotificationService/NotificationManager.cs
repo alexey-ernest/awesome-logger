@@ -11,6 +11,7 @@ namespace AwesomeLogger.NotificationService
     {
         private readonly IConfigurationProvider _config;
         private readonly IEmailService _emailService;
+        private SubscriptionClient _client;
 
         public NotificationManager(IEmailService emailService, IConfigurationProvider config)
         {
@@ -21,12 +22,12 @@ namespace AwesomeLogger.NotificationService
         public void Start()
         {
             // Process messages
-            var serviceBusClient =
+            _client =
                 SubscriptionClient.CreateFromConnectionString(_config.Get(SettingNames.ServiceBusConnectionString),
                     _config.Get(SettingNames.ServiceBusNotifyTopic),
                     _config.Get(SettingNames.ServiceBusNotifyChannel));
 
-            serviceBusClient.OnMessage(message =>
+            _client.OnMessage(message =>
             {
                 try
                 {
@@ -93,6 +94,11 @@ namespace AwesomeLogger.NotificationService
                     Trace.TraceError(msg);
                 }
             });
+        }
+
+        public void Dispose()
+        {
+            _client.Close();
         }
     }
 }

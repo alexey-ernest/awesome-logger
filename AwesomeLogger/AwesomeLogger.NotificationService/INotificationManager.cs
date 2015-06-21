@@ -1,6 +1,8 @@
-﻿namespace AwesomeLogger.NotificationService
+﻿using System;
+
+namespace AwesomeLogger.NotificationService
 {
-    internal interface INotificationManager
+    internal interface INotificationManager: IDisposable
     {
         void Start();
     }
