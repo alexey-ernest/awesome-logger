@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AwesomeLogger.Monitor.Events;
 
@@ -11,12 +11,12 @@ namespace AwesomeLogger.Monitor
     {
         private readonly string _emailToNotify;
         private readonly IErrorEventEmitter _errorEventEmitter;
-        private readonly string _searchPath;
+        private readonly ILogParserFactory _logParserFactory;
         private readonly string _machineName;
         private readonly string _pattern;
-        private readonly ILogParserFactory _logParserFactory;
+        private readonly string _searchPath;
+        private readonly ConcurrentDictionary<string, ILogParser> _parsers = new ConcurrentDictionary<string, ILogParser>();
         private FileSystemWatcher _watcher;
-        private List<ILogParser> _parsers;
 
         public LogMonitor(string machineName, string searchPath, string pattern, string emailToNotify,
             IErrorEventEmitter errorEventEmitter, ILogParserFactory logParserFactory)
@@ -37,8 +37,9 @@ namespace AwesomeLogger.Monitor
             {
                 foreach (var parser in _parsers)
                 {
-                    parser.Dispose();
+                    parser.Value.Dispose();
                 }
+                _parsers.Clear();
             }
         }
 
@@ -62,12 +63,12 @@ namespace AwesomeLogger.Monitor
                 _watcher.Changed += OnChanged;
                 _watcher.Created += OnChanged;
                 _watcher.Deleted += OnChanged;
-                _watcher.Renamed += OnRenamed;
+                _watcher.Renamed += OnChanged;
 
                 _watcher.EnableRaisingEvents = true;
 
                 // Scan logs
-                _parsers = Scan(_searchPath);
+                Scan(_searchPath);
             }
             catch (Exception e)
             {
@@ -76,45 +77,61 @@ namespace AwesomeLogger.Monitor
             }
         }
 
-        private List<ILogParser> Scan(string path)
+        private void Scan(string path)
         {
             var baseDir = Path.GetDirectoryName(path);
             if (string.IsNullOrEmpty(baseDir))
             {
-                return new List<ILogParser>();
+                return;
             }
 
             var filePattern = Path.GetFileName(path);
             if (!Directory.Exists(baseDir) && !File.Exists(baseDir))
             {
                 // path does not exist
-                return new List<ILogParser>();
+                return;
             }
 
             var attr = File.GetAttributes(baseDir);
             if (attr.HasFlag(FileAttributes.Directory))
             {
-                // directory, read files
+                // directory
+                
+                // read files
                 var di = new DirectoryInfo(baseDir);
                 var files = di.GetFiles(filePattern, SearchOption.TopDirectoryOnly);
 
                 // scanning files
-                var parsers = files.Select(fileInfo => Parse(fileInfo.FullName)).ToList();
-                return parsers;
+                foreach (var file in files)
+                {
+                    var parser = Parse(file.FullName);
+                    _parsers.AddOrUpdate(file.FullName, parser, (s, logParser) =>
+                    {
+                        logParser.Dispose();
+                        return parser;
+                    });
+                }
             }
-
-            // file
-            return new List<ILogParser> {Parse(baseDir)};
+            else
+            {
+                // file
+                var fileParser = Parse(baseDir);
+                _parsers.AddOrUpdate(baseDir, fileParser, (s, logParser) =>
+                {
+                    logParser.Dispose();
+                    return fileParser;
+                });
+            }
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            Parse(e.FullPath);
-        }
-
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {
-            Parse(e.FullPath);
+            var parser = Parse(e.FullPath);
+            _parsers.AddOrUpdate(e.FullPath, parser, (s, logParser) =>
+            {
+                logParser.Dispose();
+                return parser;
+            });
         }
 
         private ILogParser Parse(string filePath)
