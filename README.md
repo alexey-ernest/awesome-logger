@@ -1,6 +1,8 @@
 # Awesome Logger
 Log monitoring and notification system. The system allows its users to monitor intranet application logs and receive notifications if specific events occur.
 
+## Architecture
+
 ## Requirements
 
 OS:
@@ -28,7 +30,35 @@ Take a look at the instructions provided by [Microsoft](https://msdn.microsoft.c
 * Create namespace (if not created) and add users and groups to access service bus: `New-SBNamespace -name DemoSB -ManageUsers yourDomain\YourAccount`
 * Get connection string to use in services: `Get-SBClientconfiguration –namespace DemoSB`
 
-## Architecture
+### Installing Error-Handling service
+This service should be installed on server machine. Service can bee scaled horizontally by installing on additional machines, since all services connected to the same service bus, they will work together to serve incoming messages.
+
+Specify settings in `App.config`:
+* 
+
+Install as Console Application
+* Copy all files from `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release` to server machine.
+* Run `AwesomeLogger.ErrorHandlingService.exe` with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing pupose you can run service under **current user** account.
+
+Install as Windows Service
+* Open `Command Line` under Administator account.
+* Go to `AwesomeLogger\AwesomeLogger.ErrorHandlingService\bin\Release\Install` directory
+* `> install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to servie bus. For testing pupose you can run service under **current user** account.
+* Windows service `AwesomeLogger Error-Handling Service` should have `Running` status.
+
+### Installing Notification service
+This service should be installed on server machine. Service can bee scaled horizontally by installing on additional machines, since all services connected to the same service bus, they will work together to serve incoming messages.
+
+#### Install as Console Application
+
+#### Install as Windows Service
+
+### Installing Monitor service
+This service should be installed on each client machine running Windows.
+
+#### Install as Console Application
+
+#### Install as Windows Service
 
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
