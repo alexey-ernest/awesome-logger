@@ -13,6 +13,8 @@ Log monitoring and notification system. The system allows its users to monitor i
 ## Architecture
 The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-Architecture (SOA) principles. The system is breaked up into small micro-services, independent separated pieces with single responsibility. Each service owns its data (diffenerent data storages can be used for each micro-service), can be versioned, updated and deployed separateley and can be scaled up horizontally independently if needed. 
 
+Because subscriptions data and notification data have a very different frequency and purpose, I've decided to split theses APIs into two micro-services: `Subscriptions API` and `Notification Service`.
+
 The system is distributed and designed without Single-Point-Of-Failure (SPOF). Each component can be scaled and load balanced. For Audit DB NoSQL database is recommended because of high load and log-like structure (heavy write, no changes, low read). Cassandra can be perfectly meet this data usage pattern.
 
 ![](Assets/AwesomeLogger-Architecture.png?raw=true)
