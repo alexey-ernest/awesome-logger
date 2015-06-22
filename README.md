@@ -27,9 +27,10 @@ The system is distributed and designed without Single-Point-Of-Failure (SPOF). E
 7. After successfull commitment of the audit record, the service sends notification using external email service. In our case it is an easy to use `SendGrid` service. You can specify username/password for your `SendGrid` account at the `App.config` of the `NotificationService`.
 8. If an error occured while parsing/monitoring log files in `Monitor Service`, the service emits special type of event into the `Service Bus` so special service `Error-Handling Service` could process this error. Typically `Error-Handling Service` just logging error messages so an admin can view them later.
 9. The system has a web-based user interface (Web UI or Website) to create/update/delete subscriptions. Only one user `System Administrator` can access this interface. `Username/password` settings for administrator account can be configured in `Web.config` of the `Web` project. For security reasons SSL should be used to encrypt data between Web UI and administrator PC.
-10. When `System Administrator` successfully log on to the `Website`, the site proxying requests and using secret `AccessToken` making requests to `Subscription API`. Administrator can even view all notifications for each subscriptions from `AuditDB`. 
-11. When Administrator creates new subscription or modify existing through `Web UI`, `Subscriptions API` detects those changes and emits special kind of *Update Subscription* event to `Service Bus`.
-12. `Monitor Service` receives *Update Subscription* event and restarts itself by retrieving new configuration from `Subscriptions API`.
+10. When `System Administrator` successfully log on to the `Website`, the site proxying requests and using secret `AccessToken` making requests to `Subscription API`. 
+11. Administrator can even view all notifications for each subscriptions from `AuditDB`. 
+12. When Administrator creates new subscription or modify existing through `Web UI`, `Subscriptions API` detects those changes and emits special kind of *Update Subscription* event to `Service Bus`.
+13. `Monitor Service` receives *Update Subscription* event and restarts itself by retrieving new configuration from `Subscriptions API`.
 
 Using Service Bus as a communication channel makes the system robust and fault-tolerant. If one of the services fails, no messages will be lost and after recovering subscribers will receive all unprocessed messages.
 
