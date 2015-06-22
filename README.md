@@ -41,7 +41,11 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
 ### Web UI
-Web UI 
+Web UI is implemented as Single-Page-Application using Angular.js
+
+#### Login page
+
+![](Assets/screenshots/login.png?raw=true)
 
 
 ### Subscriptions API
@@ -72,7 +76,7 @@ Software:
 ## Technologies
 The project powered by:
 * .Net Framework 4.5
-* ASP.NET MVC 5 framework
+* ASP.NET MVC 5 and WebApi frameworks
 * MSSQL as data storage and Entity Framework as ORM
 * HTML5/CSS3 and JavaScript/jQuery/Angular.js for Single-Page-Application (SPA)
 * Microsoft Service Bus for Windows Server as communication channel and queue
