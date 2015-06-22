@@ -26,7 +26,11 @@ Data flow:
 5. When the service receives notification message, its first tries to make an audit record on the `Audit API` service. If the service failed to make an audit record it's return message to the `Service Bus` queue, so another `Notification Service` could be more lucky. 
 6. If the reason of `Audit API` failure is duplicate conflict in `Audit DB`, the service just removes the message from the `Service Bus` and starts listening for other messages.
 7. After successfull commitment of the audit record, the service sends notification using external email service. In our case it is an easy to use `SendGrid` service. You can specify username/password for your `SendGrid` account at the `App.config` of the `NotificationService`.
-8. 
+8. If an error occured while parsing/monitoring log files in `Monitor Service`, the service emits special type of event into the `Service Bus` so special service `Error-Handling Service` could process this error. Typically `Error-Handling Service` just logging error messages so an admin can view them later.
+9. The system has a web-based user interface (Web UI or Website) to create/update/delete subscriptions. Only one user `System Administrator` can access this interface. `Username/password` settings for administrator account can be configured in `Web.config` of the `Web` project. For security reasons SSL should be used to encrypt data between Web UI and administrator PC.
+10. When `System Administrator` successfully log on to the `Website`, the site proxying requests and using secret `AccessToken` making requests to `Subscription API`. Administrator can even view all notifications for each subscriptions from `AuditDB`. 
+11. When Administrator creates new subscription or modify existing through `Web UI`, `Subscriptions API` detects those changes and emits special kind of *Update Subscription* event to `Service Bus`.
+12. `Monitor Service` receives *Update Subscription* event and restarts itself by retrieving new configuration from `Subscriptions API`.
 
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
