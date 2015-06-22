@@ -4,6 +4,7 @@ Log monitoring and notification system. The system allows its users to monitor i
 * [Architecture](#architecture)
 * [Components](#components)
 * [Requirements](#requirements)
+* [Technologies](#technologies)
 * [How to Build](#how-to-build)
 * [How to Install](#how-to-install)
 * [Further Improvements](#further-improvements)
@@ -40,6 +41,8 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
 ### Web UI
+Web UI 
+
 
 ### Subscriptions API
 
@@ -65,6 +68,14 @@ Software:
 * Microsoft Visual Studio 2013
 * Microsoft SQL Server 2014 Express LocalDB (should be bundled with Visual Studio)
 * [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx). Installation instructions also provided [here](#installing-service-bus).
+
+## Technologies
+The project powered by:
+* .Net Framework 4.5
+* ASP.NET MVC 5 framework
+* MSSQL as data storage and Entity Framework as ORM
+* HTML5/CSS3 and JavaScript/jQuery/Angular.js for Single-Page-Application (SPA)
+* Microsoft Service Bus for Windows Server as communication channel and queue
 
 ## How to Build
 * Open `AwesomeLogger/AwesomeLogger.sln`
