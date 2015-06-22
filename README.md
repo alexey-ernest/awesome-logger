@@ -1,6 +1,15 @@
 # Awesome Logger
 Log monitoring and notification system. The system allows its users to monitor intranet application logs and receive notifications if specific events occur.
 
+* [Architecture](#architecture)
+* [Components](#components)
+* [Requirements](#requirements)
+* [How to Build](#how-to-build)
+* [How to Install](#how-to-install)
+* [Further Improvements](#further-improvements)
+* [License](#license)
+* [Contacts](#contacts)
+
 ## Architecture
 The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-Architecture (SOA) principles. The system is breaked up into small micro-services, independent separated pieces with single responsibility. Each service owns its data (diffenerent data storages can be used for each micro-service), can be versioned, updated and deployed separateley and can be scaled up horizontally independently if needed. 
 
@@ -112,7 +121,7 @@ General thoughts about how to impove the system.
 Monitoring service:
 * Should persist it's state (byte position in a log file) on the client machine to prevent full re-scan after new configuration received or restart.
 
-## Licence
+## License
 The system is distributed under [MIT](LICENSE) license.
 
 ## Contacts
