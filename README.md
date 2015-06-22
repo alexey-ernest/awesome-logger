@@ -1,7 +1,57 @@
 # Awesome Logger
 Log monitoring and notification system. The system allows its users to monitor intranet application logs and receive notifications if specific events occur.
 
+* [Architecture](#architecture)
+* [Components](#components)
+* [Requirements](#requirements)
+* [How to Build](#how-to-build)
+* [How to Install](#how-to-install)
+* [Further Improvements](#further-improvements)
+* [License](#license)
+* [Contacts](#contacts)
+
 ## Architecture
+The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-Architecture (SOA) principles. The system is breaked up into small micro-services, independent separated pieces with single responsibility. Each service owns its data (diffenerent data storages can be used for each micro-service), can be versioned, updated and deployed separateley and can be scaled up horizontally independently if needed. 
+
+The system is distributed and designed without Single-Point-Of-Failure (SPOF). Each component can be scaled and load balanced. For Audit DB NoSQL database is recommended because of high load and log-like structure (heavy write, no changes, low read). Cassandra can be perfectly meet this data usage pattern.
+
+![](Assets/AwesomeLogger-Architecture.png?raw=true)
+
+
+1. When a `Monitor Service` starts its makes a request to `Subscriptions API` to get subscription parameters for client machine. For security reasons `Subscriptions API` should use SSL to encrypt messages. Also, communication between client and API is protected with access token, which is specified in configuration files on both sides: for `Monitor Service` its an *AccessToken* in App.config, for `Subscriptions API` service its an *ExternalAccessToken* in Web.config.
+2. `Subscription API` executes query agains `Subscriptions DB` to find any subscription parmaeters for client machine. If there are any API sends them to client machine and `Monitor Service` starts parsing logs.
+3. If `Monitor Service` finds any match it emits special message *Pattern Match Found* to `Service Bus`. Connection between `Service Bus` and publishers/subscribers is encrypted and configured while installation process.
+4. One or many `Notification Services` listening to *Pattern Match Found* messages compete for message processing. If there are a lot of messages generated you can simple install more `Notification Services`. 
+5. When the service receives notification message, its first tries to make an audit record on the `Audit API` service. If the service failed to make an audit record it's return message to the `Service Bus` queue, so another `Notification Service` could be more lucky. 
+6. If the reason of `Audit API` failure is duplicate conflict in `Audit DB`, the service just removes the message from the `Service Bus` and starts listening for other messages.
+7. After successfull commitment of the audit record, the service sends notification using external email service. In our case it is an easy to use `SendGrid` service. You can specify username/password for your `SendGrid` account at the `App.config` of the `NotificationService`.
+8. If an error occured while parsing/monitoring log files in `Monitor Service`, the service emits special type of event into the `Service Bus` so special service `Error-Handling Service` could process this error. Typically `Error-Handling Service` just logging error messages so an admin can view them later.
+9. The system has a web-based user interface (Web UI or Website) to create/update/delete subscriptions. Only one user `System Administrator` can access this interface. `Username/password` settings for administrator account can be configured in `Web.config` of the `Web` project. For security reasons SSL should be used to encrypt data between Web UI and administrator PC.
+10. When `System Administrator` successfully log on to the `Website`, the site proxying requests and using secret `AccessToken` making requests to `Subscription API`. 
+11. Administrator can even view all notifications for each subscriptions from `AuditDB`. 
+12. When Administrator creates new subscription or modify existing through `Web UI`, `Subscriptions API` detects those changes and emits special kind of *Update Subscription* event to `Service Bus`.
+13. `Monitor Service` receives *Update Subscription* event and restarts itself by retrieving new configuration from `Subscriptions API`.
+
+Using Service Bus as a communication channel makes the system robust and fault-tolerant. If one of the services fails, no messages will be lost and after recovering subscribers will receive all unprocessed messages.
+
+## Components
+The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
+
+### Web UI
+
+### Subscriptions API
+
+### Service Bus
+
+### Monitoring Service
+
+### Error-Handling Service
+
+### Audit API
+
+### Notification Service
+
+### Log Generator Service
 
 ## Requirements
 
@@ -82,34 +132,13 @@ Install as a Windows Service
 * Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Monitor Service` should have `Running` status.
 
-
-
-## Components
-The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
-
-### Web UI
-
-### Subscriptions API
-
-### Service Bus
-
-### Monitoring Service
-
-### Error-Handling Service
-
-### Audit API
-
-### Notification Service
-
-### Log Generator Service
-
 ## Further Improvements
 General thoughts about how to impove the system.
 
 Monitoring service:
 * Should persist it's state (byte position in a log file) on the client machine to prevent full re-scan after new configuration received or restart.
 
-## Licence
+## License
 The system is distributed under [MIT](LICENSE) license.
 
 ## Contacts
