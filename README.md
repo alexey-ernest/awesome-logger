@@ -73,7 +73,9 @@ Web UI is implemented as a Single-Page-Application using Angular.js
 * Click `Refresh` button to reload page with newer results.
 
 ### Subscriptions API
-Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
+Implemented as a RESTful API HTTP service (ASP.NET WebApi application).
+
+Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
 
 This API is consumed by `Website` for managing subscriptions by Administrator and by `Monitor Service` to retrieve subscription params. For accessing this API you need AccessToken which is specified on configuration file. For Read-Write access there is a dedicated AccessToken using in Website->API communication. Fir Monitor->API communication there is a different AccessToken.
 
@@ -87,7 +89,9 @@ Address | HTTP Method | Description
 /machine/{name} | GET | Retrieves all subscriptions by machine name.
 
 ### Audit API
-Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
+Implemented as a RESTful API HTTP service (ASP.NET WebApi). 
+
+Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
 
 This API is consumed internally by `Website` for displaying Subscription History and by `Notification Service` for creating audit records. For accessing this API you need AccessToken which is specified on configuration file.
 
@@ -214,6 +218,42 @@ Install as a Windows Service
 * Go to `AwesomeLogger\AwesomeLogger.Monitor\bin\Release\Install` directory
 * Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Monitor Service` should have `Running` status.
+
+### Installing Subscriptions API
+
+Specify settings in `Web.config`:
+* `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:39152/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because AccessToken in plain text will be sent with each request
+* Update URI in Website's `Web.config` and in `App.config` of each `Monitor Service`.
+
+### Installing Audit API
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:39153/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because AccessToken in plain text will be sent with each request
+* Update URI in Website's `Web.config` and in `App.config` of each `Notification Service`.
+
 
 ## Further Improvements
 General thoughts about how to impove the system.
