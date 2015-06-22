@@ -43,6 +43,10 @@ The system consists of several services and website. All components are loosely 
 * [Website](#website)
 * [Subscriptions API](#subscriptions-api)
 * [Audit API](#audit-api)
+* [Error-Handling Service](#error-handling-service)
+* [Notification Service](#notification-service)
+* [Monitor Service](#monitor-service)
+* [Log Generator Service](#log-generator-service)
 
 ### Website
 ASP.NET MVC application implemented as a Single-Page-Application using Angular.js
@@ -115,7 +119,7 @@ Listens for notification messages then trying to create an audit record using `A
 * if audit request failes due to some other error, message should be returned to Service Bus. Another `NotificationService` instance will try to process it.
 * If audit record committed, then service will try to send email (if SendGrid credentials specified in App.config).
 
-### Monitoring Service
+### Monitor Service
 Implemented as a Console Application. Should be [installed](#installing-monitor-service) as a Windows Service.
 
 * Retrieves related subscription parameters from `Subscriptions API` immediately after start.
