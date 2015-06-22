@@ -22,14 +22,15 @@ namespace AwesomeLogger.Generator
 
             try
             {
-                using (
-                var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 1048576, FileOptions.Asynchronous))
+                // Reading input until empty line
+                string input;
+                while (!string.IsNullOrEmpty(input = Console.ReadLine()))
                 {
-                    using (var file = new StreamWriter(fileStream, Encoding.UTF8, 1024))
+                    using (
+                        var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite,
+                            1048576, FileOptions.Asynchronous))
                     {
-                        // Reading input until empty line
-                        string input;
-                        while (!string.IsNullOrEmpty(input = Console.ReadLine()))
+                        using (var file = new StreamWriter(fileStream, Encoding.UTF8, 1024))
                         {
                             // Writing to log and flushing
                             file.WriteLine(input);
@@ -43,7 +44,6 @@ namespace AwesomeLogger.Generator
                 Console.WriteLine("Error: {0}", e);
             }
 
-            
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
