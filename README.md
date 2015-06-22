@@ -4,6 +4,7 @@ Log monitoring and notification system. The system allows its users to monitor i
 * [Architecture](#architecture)
 * [Components](#components)
 * [Requirements](#requirements)
+* [Technologies](#technologies)
 * [How to Build](#how-to-build)
 * [How to Install](#how-to-install)
 * [Further Improvements](#further-improvements)
@@ -39,21 +40,129 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
-### Web UI
+* [Website](#website)
+* [System Administrator](#system-administrator)
+* [Subscriptions API](#subscriptions-api)
+* [Subscriptions DB](#subscriptions-db)
+* [Audit API](#audit-api)
+* [Audit DB](#audit-db)
+* [Error-Handling Service](#error-handling-service)
+* [Notification Service](#notification-service)
+* [Monitor Service](#monitor-service)
+* [Log Generator Service](#log-generator-service)
+* [Client Machine](#client-machine)
+* [SendGrid](#sendgrid)
+
+### Website
+ASP.NET MVC application implemented as a Single-Page-Application using Angular.js
+
+#### Login page
+
+![](Assets/screenshots/login.png?raw=true)
+
+* Enter username/password for admin and click `Sign in`. Default credentials specified in Web.config: `admin/admin`
+
+#### Subscriptions page
+
+![](Assets/screenshots/subscriptions.png?raw=true)
+
+* You can list all existing subscriptions
+* Create new subscription
+* Go to details page
+
+#### Subscription details page
+
+![](Assets/screenshots/subscription-details.png?raw=true)
+
+* Change values and click `Save`. After that all logs will be re-scanned.
+* You can discover monitoring history by clicking `View History` at the bottom.
+
+#### Subscription history page
+
+![](Assets/screenshots/subscription-history.png?raw=true)
+
+* All found matches in reverse chronological order it was discovered.
+* Hover mouse over `Time` field to view date also.
+* Click `Refresh` button to reload page with newer results.
+
+### System Administrator
+User who knows username/login for Administrator Account. 
+
+* Using computer and web browser opens `Website` main page
+* Will be redirected to `Log in page` if not yet authorized
+* Enters Administrator credentials and submits the form
+* Will be redirected to `Subscriptions page`
 
 ### Subscriptions API
+Implemented as a RESTful API HTTP service (ASP.NET WebApi application).
 
-### Service Bus
+Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
 
-### Monitoring Service
+This API is consumed by `Website` for managing subscriptions by Administrator and by `Monitor Service` to retrieve subscription params. For accessing this API you need AccessToken which is specified on configuration file. For Read-Write access there is a dedicated AccessToken using in Website->API communication. Fir Monitor->API communication there is a different AccessToken.
 
-### Error-Handling Service
+Address | HTTP Method | Description 
+:--- | :--- | :---
+/ | GET | Returns [queryable](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/supporting-odata-query-options) collection of subscriptions.
+/ | POST | Creates new subscription.
+/{id} | GET | Returns subscriptions by id.
+/{id} | PUT | Updates subscriptions by id.
+/{id} | DELETE | Deletes subscription by id.
+/machine/{name} | GET | Retrieves all subscriptions by machine name.
+
+### Subscriptions DB
+Data storage for peristing subscription parameters. MS SQL database used in this project because of ease of integration in .NET stack.
 
 ### Audit API
+Implemented as a RESTful API HTTP service (ASP.NET WebApi). 
+
+Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
+
+This API is consumed internally by `Website` for displaying Subscription History and by `Notification Service` for creating audit records. For accessing this API you need AccessToken which is specified on configuration file.
+
+Address | HTTP Method | Description 
+:--- | :--- | :---
+/ | POST | Records pattern-match event.
+/?m={m}&s={s}&p={p}&e={e} | GET | Returns [queryable](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/supporting-odata-query-options) collection of pattern matches. {m} - machine name, {s} - search path, {p} - pattern to match, {e} - email to send notifications to.
+
+### Audit DB
+Data storage for recording found pattern matches. MS SQL database used in this project because of ease of integration in .NET stack. But for log-structured data: many writes, read-only, few reads, its recomended to use NoSQL DBMS such as Cassandra.
+
+### Error-Handling Service
+Implemented as a Console Application. Can also be [installed](#installing-error-handling-service) as a Windows Service. Listens for error messages and logs them into the Windows Event Log.
 
 ### Notification Service
+Implemented as a Console Application. Should be [installed](#installing-notification-service) as a Windows Service.
+Listens for notification messages then trying to create an audit record using `Audit API` and send email using third-party service `SendGrid`.
+
+* If audit request failes due to duplicate conflict exception, message should be dropped from Service Bus.
+* if audit request failes due to some other error, message should be returned to Service Bus. Another `NotificationService` instance will try to process it.
+* If audit record committed, then service will try to send email (if SendGrid credentials specified in App.config).
+
+### Monitor Service
+Implemented as a Console Application. Should be [installed](#installing-monitor-service) as a Windows Service.
+
+* Retrieves related subscription parameters from `Subscriptions API` immediately after start.
+* Listen for messages about subscription update. If related subscription updated, monitor stops all parsers and retrieves fresh subscription parameters from `Subscriptions API`.
+* Scans files in specified directory which fit file search criteria. For instance, `C:\logs\*` will scan all files in directory, `C:\logs\*.log` will only scan for files with extension `.log`
+* Parses files by reading line by line and testing against subscription's pattern. If line matches the pattern, parser emits corresponding message to Service Bus.
+* Listens for system events to be notified for changes according monitoring files. If file modified, renamed or created, the parser scans it again.
 
 ### Log Generator Service
+Implemented as a Console Application for testing purposes. Generates log files by reading user input.
+
+### Service Bus
+Service Bus is used as a robust messaging service for loosely-coupled message-driven components of the system.
+
+There are three topics and three message types in the system:
+* Notifications topic for queuing pattern-match notifications for sending. `Monitor Service` emits these messages and `Notification Service` handles them.
+* Errors topic for emitting messages about errors occured in the system. `Error-Handling Service` then logs them to Windows Event Log.
+* Subscriptions topic for sending messages about subscription updates. `Subscriptions API` track changes and emits messages. `Monitor Services` handles these messages only if machine names of the subscription and client machine match.
+
+### Client Machine
+Machine with installed `Monitor Service`
+
+### SendGrid
+Third-party cloud email service. Can be easily replaced with outher one.
 
 ## Requirements
 
@@ -65,6 +174,15 @@ Software:
 * Microsoft Visual Studio 2013
 * Microsoft SQL Server 2014 Express LocalDB (should be bundled with Visual Studio)
 * [Microsoft Service Bus for Windows Server v1.1](https://msdn.microsoft.com/ru-ru/library/dn282152(v=azure.10).aspx). Installation instructions also provided [here](#installing-service-bus).
+
+## Technologies
+The project powered by:
+* .Net Framework 4.5
+* ASP.NET MVC 5 and WebApi frameworks
+* MSSQL as data storage and Entity Framework as ORM
+* Microsoft Unity for IoC
+* HTML5/CSS3/Bootstrap and JavaScript/jQuery/Angular.js for Single-Page-Application (SPA)
+* Microsoft Service Bus for Windows Server as communication channel and queue
 
 ## How to Build
 * Open `AwesomeLogger/AwesomeLogger.sln`
@@ -133,6 +251,62 @@ Install as a Windows Service
 * Go to `AwesomeLogger\AwesomeLogger.Monitor\bin\Release\Install` directory
 * Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Monitor Service` should have `Running` status.
+
+### Installing Subscriptions API
+
+Specify settings in `Web.config`:
+* `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:39152/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because AccessToken in plain text will be sent with each request
+* Update URI in Website's `Web.config` and in `App.config` of each `Monitor Service`.
+
+### Installing Audit API
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:39153/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because AccessToken in plain text will be sent with each request
+* Update URI in Website's `Web.config` and in `App.config` of each `Notification Service`.
+
+### Installing Website
+
+Specify settings in `Web.config`:
+* `AdminUsername` - username for administrator access (default is `admin`)
+* `AdminPassword` - password for administrator access (default is `admin`)
+* `SubscriptionsUri` - address of the [Subscriptions API](#subscriptions-api) service.
+* `AuditUri` - address of the [Audit API](#audit-api) service.
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:1915/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because username/password in plain text will be sent when Administrator logs in.
 
 ## Further Improvements
 General thoughts about how to impove the system.
