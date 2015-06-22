@@ -1,0 +1,67 @@
+﻿body {
+    padding-bottom: 20px;
+    background: #eaeaea;
+    text-align: center;
+}
+
+.brand {
+    display: block;
+    height: 40px;
+    background: url(images/brand.png) no-repeat center center;
+    -ms-background-size: contain;
+    background-size: contain;
+    margin: 50px auto;
+    text-indent: -1000em;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.footer {
+    font-size: 11px;
+    color: #a9a9a9;
+    border-top: 1px solid #dddddd;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+@media(min-width: 992px) {
+    .page-container {
+        text-align: left;
+    }
+}
+
+.field-validation-error,
+.validation-summary-errors {
+    color: #ff1493
+}
+
+.wrapper-loading {
+    padding: 20px 0 20px;
+	clear: both;
+}
+
+.wrap { 
+   white-space: pre-wrap;      /* CSS3 */   
+   white-space: -moz-pre-wrap; /* Firefox */    
+   white-space: -pre-wrap;     /* Opera <7 */   
+   white-space: -o-pre-wrap;   /* Opera 7 */    
+   word-wrap: break-word;      /* IE */
+}
+
+.wraped-table {
+    -moz-word-break:break-all;
+    -o-word-break:break-all;
+    word-break:break-all;
+    /*table-layout:fixed*/
+}
+
+/* Bootstrap Overridden */
+
+h1, .h1 {
+    color: #129e5e;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
