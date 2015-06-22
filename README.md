@@ -73,7 +73,7 @@ Web UI is implemented as a Single-Page-Application using Angular.js
 * Click `Refresh` button to reload page with newer results.
 
 ### Subscriptions API
-Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API supported by major of clients.
+Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients.
 
 Address | HTTP Method | Description 
 :--- | :--- | :---
@@ -85,6 +85,12 @@ Address | HTTP Method | Description
 /machine/{name} | GET | Retrieves all subscriptions by machine name.
 
 ### Service Bus
+Service Bus is used as a robust messaging service for loosely-coupled message-driven components of the system.
+
+There are three topics and three message types in the system:
+* Notifications topic for queuing pattern-match notifications for sending. `Monitor Service` emits these messages and `Notification Service` handles them.
+* Errors topic for emitting messages about errors occured in the system. `Error-Handling Service` then logs them to Windows Event Log.
+* Subscriptions topic for sending messages about subscription updates. `Subscriptions API` track changes and emits messages. `Monitor Services` handles these messages only if machine names of the subscription and client machine match.
 
 ### Monitoring Service
 
