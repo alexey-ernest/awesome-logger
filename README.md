@@ -32,6 +32,8 @@ Data flow:
 11. When Administrator creates new subscription or modify existing through `Web UI`, `Subscriptions API` detects those changes and emits special kind of *Update Subscription* event to `Service Bus`.
 12. `Monitor Service` receives *Update Subscription* event and restarts itself by retrieving new configuration from `Subscriptions API`.
 
+Using Service Bus as a communication channel makes the system robust and fault-tolerant. If one of the services fails, no messages will be lost and after recovering subscribers will receive all unprocessed messages.
+
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
