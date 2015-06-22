@@ -40,7 +40,7 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
-### Web UI
+### Website
 Web UI is implemented as a Single-Page-Application using Angular.js
 
 #### Login page
@@ -73,7 +73,9 @@ Web UI is implemented as a Single-Page-Application using Angular.js
 * Click `Refresh` button to reload page with newer results.
 
 ### Subscriptions API
-Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients.
+Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
+
+This API is consumed by `Website` for managing subscriptions by Administrator and by `Monitor Service` to retrieve subscription params. For accessing this API you need AccessToken which is specified on configuration file. For Read-Write access there is a dedicated AccessToken using in Website->API communication. Fir Monitor->API communication there is a different AccessToken.
 
 Address | HTTP Method | Description 
 :--- | :--- | :---
@@ -84,11 +86,26 @@ Address | HTTP Method | Description
 /{id} | DELETE | Deletes subscription by id.
 /machine/{name} | GET | Retrieves all subscriptions by machine name.
 
+### Audit API
+Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API is supported by major of clients. The service is implemented in micro-service architecture, has minimum dependencies and does not share it's data with other components.
+
+This API is consumed internally by `Website` for displaying Subscription History and by `Notification Service` for creating audit records. For accessing this API you need AccessToken which is specified on configuration file.
+
+Address | HTTP Method | Description 
+:--- | :--- | :---
+/ | POST | Records pattern-match event.
+/?m={m}&s={s}&p={p}&e={e} | GET | Returns [queryable](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/supporting-odata-query-options) collection of pattern matches. {m} - machine name, {s} - search path, {p} - pattern to match, {e} - email to send notifications to.
+
 ### Error-Handling Service
 Implemented as a Console Application. Can also be [installed](#installing-error-handling-service) as a Windows Service. Listens for error messages and logs them into the Windows Event Log.
 
 ### Notification Service
 Implemented as a Console Application. Should be [installed](#installing-notification-service) as a Windows Service.
+Listens for notification messages then trying to create an audit record using `Audit API` and send email using third-party service `SendGrid`.
+
+* If audit request failes due to duplicate conflict exception, message should be dropped from Service Bus.
+* if audit request failes due to some other error, message should be returned to Service Bus. Another `NotificationService` instance will try to process it.
+* If audit record committed, then service will try to send email (if SendGrid credentials specified in App.config).
 
 ### Monitoring Service
 Implemented as a Console Application. Should be [installed](#installing-monitor-service) as a Windows Service.
@@ -98,8 +115,6 @@ Implemented as a Console Application. Should be [installed](#installing-monitor-
 * Scans files in specified directory which fit file search criteria. For instance, `C:\logs\*` will scan all files in directory, `C:\logs\*.log` will only scan for files with extension `.log`
 * Parses files by reading line by line and testing against subscription's pattern. If line matches the pattern, parser emits corresponding message to Service Bus.
 * Listens for system events to be notified for changes according monitoring files. If file modified, renamed or created, the parser scans it again.
-
-### Audit API
 
 
 
