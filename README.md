@@ -84,6 +84,27 @@ Address | HTTP Method | Description
 /{id} | DELETE | Deletes subscription by id.
 /machine/{name} | GET | Retrieves all subscriptions by machine name.
 
+### Error-Handling Service
+Implemented as a Console Application. Can also be [installed](#installing-error-handling-service) as a Windows Service. Listens for error messages and logs them into the Windows Event Log.
+
+### Notification Service
+Implemented as a Console Application. Should be [installed](#installing-notification-service) as a Windows Service.
+
+### Monitoring Service
+Implemented as a Console Application. Should be [installed](#installing-monitor-service) as a Windows Service.
+
+* Retrieves related subscription parameters from `Subscriptions API` immediately after start.
+* Listen for messages about subscription update. If related subscription updated, monitor stops all parsers and retrieves fresh subscription parameters from `Subscriptions API`.
+* Scans files in specified directory which fit file search criteria. For instance, `C:\logs\*` will scan all files in directory, `C:\logs\*.log` will only scan for files with extension `.log`
+* Parses files by reading line by line and testing against subscription's pattern. If line matches the pattern, parser emits corresponding message to Service Bus.
+* Listens for system events to be notified for changes according monitoring files. If file modified, renamed or created, the parser scans it again.
+
+### Audit API
+
+
+
+### Log Generator Service
+
 ### Service Bus
 Service Bus is used as a robust messaging service for loosely-coupled message-driven components of the system.
 
@@ -91,16 +112,6 @@ There are three topics and three message types in the system:
 * Notifications topic for queuing pattern-match notifications for sending. `Monitor Service` emits these messages and `Notification Service` handles them.
 * Errors topic for emitting messages about errors occured in the system. `Error-Handling Service` then logs them to Windows Event Log.
 * Subscriptions topic for sending messages about subscription updates. `Subscriptions API` track changes and emits messages. `Monitor Services` handles these messages only if machine names of the subscription and client machine match.
-
-### Monitoring Service
-
-### Error-Handling Service
-
-### Audit API
-
-### Notification Service
-
-### Log Generator Service
 
 ## Requirements
 
