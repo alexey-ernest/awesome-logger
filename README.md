@@ -3,7 +3,7 @@ Log monitoring and notification system. The system allows its users to monitor i
 
 ## Architecture
 
-![](blob/master/Assets/AwesomeLogger-Architecture.png?raw=true)
+![](Assets/AwesomeLogger-Architecture.png?raw=true)
 
 ## Requirements
 
