@@ -40,6 +40,10 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
+* [Website](#website)
+* [Subscriptions API](#subscriptions-api)
+* [Audit API](#audit-api)
+
 ### Website
 ASP.NET MVC application implemented as a Single-Page-Application using Angular.js
 
