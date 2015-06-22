@@ -6,6 +6,25 @@ The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-A
 
 ![](Assets/AwesomeLogger-Architecture.png?raw=true)
 
+## Components
+The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
+
+### Web UI
+
+### Subscriptions API
+
+### Service Bus
+
+### Monitoring Service
+
+### Error-Handling Service
+
+### Audit API
+
+### Notification Service
+
+### Log Generator Service
+
 ## Requirements
 
 OS:
@@ -84,27 +103,6 @@ Install as a Windows Service
 * Go to `AwesomeLogger\AwesomeLogger.Monitor\bin\Release\Install` directory
 * Type `install <domain_name>\<user_name> <password>`, by providing user account credentions with [sufficient permissions](#installing-service-bus) to connect to service bus. For testing purpose you can run service under **current user** account.
 * Windows service `AwesomeLogger Monitor Service` should have `Running` status.
-
-
-
-## Components
-The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
-
-### Web UI
-
-### Subscriptions API
-
-### Service Bus
-
-### Monitoring Service
-
-### Error-Handling Service
-
-### Audit API
-
-### Notification Service
-
-### Log Generator Service
 
 ## Further Improvements
 General thoughts about how to impove the system.
