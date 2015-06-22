@@ -21,8 +21,12 @@ Data flow:
 
 1. When a `Monitor Service` started its making a request to `Subscriptions API` to get subscription parameters for client machine. For security reasons `Subscriptions API` should use SSL to encrypt messages. Also, communication between client and API is protected with access token, which is specified in configuration files on both sides: for `Monitor Service` its an *AccessToken* in App.config, for `Subscriptions API` service its an *ExternalAccessToken* in Web.config.
 2. `Subscription API` executes query agains `Subscriptions DB` to find any subscription parmaeters for client machine. If there are any API sends them to client machine and `Monitor Service` starts parsing logs.
-3. If `Monitor Service` finds any match it emits special message to `Service Bus`. Connection between `Service Bus` and publishers/subscribers is encrypted and configured while installation process.
-4. 
+3. If `Monitor Service` finds any match it emits special message *Pattern Match Found* to `Service Bus`. Connection between `Service Bus` and publishers/subscribers is encrypted and configured while installation process.
+4. One or many `Notification Services` listening to *Pattern Match Found* messages compete for message processing. If there are a lot of messages generated you can simple install more `Notification Services`. 
+5. When the service receives notification message, its first tries to make an audit record on the `Audit API` service. If the service failed to make an audit record it's return message to the `Service Bus` queue, so another `Notification Service` could be more lucky. 
+6. If the reason of `Audit API` failure is duplicate conflict in `Audit DB`, the service just removes the message from the `Service Bus` and starts listening for other messages.
+7. After successfull commitment of the audit record, the service sends notification using external email service. In our case it is an easy to use `SendGrid` service. You can specify username/password for your `SendGrid` account at the `App.config` of the `NotificationService`.
+8. 
 
 ## Components
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
