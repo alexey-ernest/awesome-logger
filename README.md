@@ -73,6 +73,16 @@ Web UI is implemented as a Single-Page-Application using Angular.js
 * Click `Refresh` button to reload page with newer results.
 
 ### Subscriptions API
+Implemented as a RESTful API HTTP service. Unlike most of WCF bindings HTTP API supported by major of clients.
+
+Address | HTTP Method | Description 
+:--- | :--- | :---
+/ | GET | Returns [queryable](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/supporting-odata-query-options) collection of subscriptions.
+/ | POST | Creates new subscription.
+/{id} | GET | Returns subscriptions by id.
+/{id} | PUT | Updates subscriptions by id.
+/{id} | DELETE | Deletes subscription by id.
+/machine/{name} | GET | Retrieves all subscriptions by machine name.
 
 ### Service Bus
 
