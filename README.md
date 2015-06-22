@@ -41,12 +41,17 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
 * [Website](#website)
+* [System Administrator](#system-administrator)
 * [Subscriptions API](#subscriptions-api)
+* [Subscriptions DB](#subscriptions-db)
 * [Audit API](#audit-api)
+* [Audit DB](#audit-db)
 * [Error-Handling Service](#error-handling-service)
 * [Notification Service](#notification-service)
 * [Monitor Service](#monitor-service)
 * [Log Generator Service](#log-generator-service)
+* [Client Machine](#client-machine)
+* [SendGrid](#sendgrid)
 
 ### Website
 ASP.NET MVC application implemented as a Single-Page-Application using Angular.js
@@ -79,6 +84,14 @@ ASP.NET MVC application implemented as a Single-Page-Application using Angular.j
 * All found matches in reverse chronological order it was discovered.
 * Hover mouse over `Time` field to view date also.
 * Click `Refresh` button to reload page with newer results.
+
+### System Administrator
+User who knows username/login for Administrator Account. 
+
+* Using computer and web browser opens `Website` main page
+* Will be redirected to `Log in page` if not yet authorized
+* Enters Administrator credentials and submits the form
+* Will be redirected to `Subscriptions page`
 
 ### Subscriptions API
 Implemented as a RESTful API HTTP service (ASP.NET WebApi application).
