@@ -102,7 +102,8 @@ The project powered by:
 * .Net Framework 4.5
 * ASP.NET MVC 5 and WebApi frameworks
 * MSSQL as data storage and Entity Framework as ORM
-* HTML5/CSS3 and JavaScript/jQuery/Angular.js for Single-Page-Application (SPA)
+* Microsoft Unity for IoC
+* HTML5/CSS3/Bootstrap and JavaScript/jQuery/Angular.js for Single-Page-Application (SPA)
 * Microsoft Service Bus for Windows Server as communication channel and queue
 
 ## How to Build
