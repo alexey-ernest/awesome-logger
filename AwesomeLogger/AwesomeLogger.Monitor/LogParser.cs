@@ -39,7 +39,7 @@ namespace AwesomeLogger.Monitor
                     // read file line by line
                     var regex = new Regex(_pattern);
                     using (
-                        var fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1048576,
+                        var fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1048576,
                             FileOptions.Asynchronous))
                     {
                         using (var file = new StreamReader(fileStream, Encoding.UTF8, true, 1024))

@@ -65,7 +65,6 @@ namespace AwesomeLogger.Monitor
                 // Watching for changes
                 _watcher.Changed += OnChanged;
                 _watcher.Created += OnChanged;
-                _watcher.Deleted += OnChanged;
                 _watcher.Renamed += OnChanged;
 
                 _watcher.EnableRaisingEvents = true;

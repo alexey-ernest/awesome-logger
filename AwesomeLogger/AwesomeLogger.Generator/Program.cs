@@ -20,20 +20,30 @@ namespace AwesomeLogger.Generator
             Console.WriteLine("AwesomeLogger Generator: {0}", filePath);
             Console.WriteLine("Start typing then press Enter to commit...");
 
-            using (var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+            try
             {
-                using (var file = new StreamWriter(fileStream, Encoding.UTF8, 1024))
+                using (
+                var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 1048576, FileOptions.Asynchronous))
                 {
-                    // Reading input until empty line
-                    string input;
-                    while (!string.IsNullOrEmpty(input = Console.ReadLine()))
+                    using (var file = new StreamWriter(fileStream, Encoding.UTF8, 1024))
                     {
-                        // Writing to log and flushing
-                        file.WriteLine(input);
-                        file.Flush();
+                        // Reading input until empty line
+                        string input;
+                        while (!string.IsNullOrEmpty(input = Console.ReadLine()))
+                        {
+                            // Writing to log and flushing
+                            file.WriteLine(input);
+                            file.Flush();
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: {0}", e);
+            }
+
+            
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();

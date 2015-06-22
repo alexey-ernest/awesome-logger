@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using AwesomeLogger.NotificationService.Configuration;
 using AwesomeLogger.NotificationService.Exceptions;
@@ -15,6 +18,7 @@ namespace AwesomeLogger.NotificationService
         private readonly IAuditService _auditService;
         private readonly IConfigurationProvider _config;
         private readonly IEmailService _emailService;
+        private readonly HashSet<string> _filter = new HashSet<string>();
         private SubscriptionClient _client;
 
         public NotificationManager(IEmailService emailService, IConfigurationProvider config, IAuditService auditService)
@@ -63,7 +67,7 @@ namespace AwesomeLogger.NotificationService
                     var match = new PatternMatchModel
                     {
                         MachineName = string.Format("{0}", machineName),
-                        SearchPath =  string.Format("{0}", searchPath),
+                        SearchPath = string.Format("{0}", searchPath),
                         LogPath = string.Format("{0}", logPath),
                         Pattern = string.Format("{0}", pattern),
                         Line = lineNumber != null ? int.Parse(lineNumber.ToString()) : -1,
@@ -78,9 +82,9 @@ namespace AwesomeLogger.NotificationService
                         match.SearchPath = match.LogPath;
                     }
 
-                    if (!AuditAsync(match).Result)
+                    if (!CheckIfDuplicate(match) || !AuditAsync(match).Result)
                     {
-                        // conflict detected
+                        // duplicate detected
                         message.Complete();
                         return;
                     }
@@ -110,6 +114,19 @@ namespace AwesomeLogger.NotificationService
             {
                 _client.Close();
             }
+        }
+
+        private bool CheckIfDuplicate(PatternMatchModel match)
+        {
+            var key = GetHashString(string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}",
+                match.MachineName, match.SearchPath, match.Pattern, match.Email, match.LogPath, match.Line, match.Match));
+            if (_filter.Contains(key))
+            {
+                return false;
+            }
+
+            _filter.Add(key);
+            return true;
         }
 
         private async Task<bool> AuditAsync(PatternMatchModel match)
@@ -171,5 +188,24 @@ namespace AwesomeLogger.NotificationService
                 match.Created);
             Trace.TraceInformation(body);
         }
+
+        #region helpers
+
+        public static byte[] GetHash(string inputString)
+        {
+            HashAlgorithm algorithm = SHA1.Create();
+            return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+
+        public static string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }
