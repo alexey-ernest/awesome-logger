@@ -109,6 +109,9 @@ Address | HTTP Method | Description
 /{id} | DELETE | Deletes subscription by id.
 /machine/{name} | GET | Retrieves all subscriptions by machine name.
 
+### Subscriptions DB
+Data storage for peristing subscription parameters. MS SQL database used in this project because of ease of integration in .NET stack.
+
 ### Audit API
 Implemented as a RESTful API HTTP service (ASP.NET WebApi). 
 
@@ -120,6 +123,9 @@ Address | HTTP Method | Description
 :--- | :--- | :---
 / | POST | Records pattern-match event.
 /?m={m}&s={s}&p={p}&e={e} | GET | Returns [queryable](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/supporting-odata-query-options) collection of pattern matches. {m} - machine name, {s} - search path, {p} - pattern to match, {e} - email to send notifications to.
+
+### Audit DB
+Data storage for recording found pattern matches. MS SQL database used in this project because of ease of integration in .NET stack. But for log-structured data: many writes, read-only, few reads, its recomended to use NoSQL DBMS such as Cassandra.
 
 ### Error-Handling Service
 Implemented as a Console Application. Can also be [installed](#installing-error-handling-service) as a Windows Service. Listens for error messages and logs them into the Windows Event Log.
@@ -151,6 +157,12 @@ There are three topics and three message types in the system:
 * Notifications topic for queuing pattern-match notifications for sending. `Monitor Service` emits these messages and `Notification Service` handles them.
 * Errors topic for emitting messages about errors occured in the system. `Error-Handling Service` then logs them to Windows Event Log.
 * Subscriptions topic for sending messages about subscription updates. `Subscriptions API` track changes and emits messages. `Monitor Services` handles these messages only if machine names of the subscription and client machine match.
+
+### Client Machine
+Machine with installed `Monitor Service`
+
+### SendGrid
+Third-party cloud email service. Can be easily replaced with outher one.
 
 ## Requirements
 
