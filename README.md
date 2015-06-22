@@ -41,12 +41,36 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
 ### Web UI
-Web UI is implemented as Single-Page-Application using Angular.js
+Web UI is implemented as a Single-Page-Application using Angular.js
 
 #### Login page
 
 ![](Assets/screenshots/login.png?raw=true)
 
+* Enter username/password for admin and click `Sign in`. Default credentials specified in Web.config: `admin/admin`
+
+#### Subscriptions page
+
+![](Assets/screenshots/subscriptions.png?raw=true)
+
+* You can list all existing subscriptions
+* Create new subscription
+* Go to details page
+
+#### Subscription details page
+
+![](Assets/screenshots/subscription-details.png?raw=true)
+
+* Change values and click `Save`. After that all logs will be re-scanned.
+* You can discover monitoring history by clicking `View History` at the bottom.
+
+#### Subscription history page
+
+![](Assets/screenshots/subscription-history.png?raw=true)
+
+* All found matches in reverse chronological order it was discovered.
+* Hover mouse over `Time` field to view date also.
+* Click `Refresh` button to reload page with newer results.
 
 ### Subscriptions API
 
