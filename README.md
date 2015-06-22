@@ -41,7 +41,7 @@ Using Service Bus as a communication channel makes the system robust and fault-t
 The system consists of several services and website. All components are loosely coupled and can be deployed and upgraded independently. 
 
 ### Website
-Web UI is implemented as a Single-Page-Application using Angular.js
+ASP.NET MVC application implemented as a Single-Page-Application using Angular.js
 
 #### Login page
 
@@ -254,6 +254,26 @@ Install for production
 * Install SSL certificate to protect connection because AccessToken in plain text will be sent with each request
 * Update URI in Website's `Web.config` and in `App.config` of each `Notification Service`.
 
+### Installing Website
+
+Specify settings in `Web.config`:
+* `AdminUsername` - username for administrator access (default is `admin`)
+* `AdminPassword` - password for administrator access (default is `admin`)
+* `SubscriptionsUri` - address of the [Subscriptions API](#subscriptions-api) service.
+* `AuditUri` - address of the [Audit API](#audit-api) service.
+
+Install for testing
+* Open solution in Visual Studio
+* Right click on project, then select `Debug/Start new instance`
+* Service is running by IIS Express on `http://localhost:1915/` address.
+
+Install for production
+* Open solution in Visual Studio
+* Select `Release` configuration
+* Right click on project, then select `Publish` and select the type of the publishing and fill required fields
+* Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
+* Configure IIS application by specifying application directory
+* Install SSL certificate to protect connection because username/password in plain text will be sent when Administrator logs in.
 
 ## Further Improvements
 General thoughts about how to impove the system.
