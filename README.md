@@ -2,7 +2,7 @@
 Log monitoring and notification system. The system allows its users to monitor intranet application logs and receive notifications if specific events occur.
 
 ## Architecture
-The System is built using Event-Driven-Architecture (EDA) and Service-Oriented-Architecture (SOA) principles. The system is breaked up into small micro-services, independent separated pieces with single responsibility. Each service owns its data (diffenerent data storages can be used for each micro-service), can be versioned, updated and deployed separateley and can be scaled up horizontally independently if needed. 
+The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-Architecture (SOA) principles. The system is breaked up into small micro-services, independent separated pieces with single responsibility. Each service owns its data (diffenerent data storages can be used for each micro-service), can be versioned, updated and deployed separateley and can be scaled up horizontally independently if needed. 
 
 ![](Assets/AwesomeLogger-Architecture.png?raw=true)
 
