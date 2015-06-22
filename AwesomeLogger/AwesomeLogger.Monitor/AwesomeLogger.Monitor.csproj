@@ -120,7 +120,9 @@
     <Compile Include="Tasks\TaskExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Install\install.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
