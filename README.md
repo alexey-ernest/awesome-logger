@@ -18,7 +18,8 @@ The system is distributed and designed without Single-Point-Of-Failure (SPOF). E
 ![](Assets/AwesomeLogger-Architecture.png?raw=true)
 
 Data flow:
-1. When a `Monitor Service` started its making a request to `Subscriptions API` to get subscription parameters for client machine. For security reasons `Subscriptions API` should use SSL to encrypt messages. Also, communication between client and API is protected with access token, which is specified in configuration files on both sides: for `Monitor Service` its an *AccessToken* in App.config, for `Subscriptions API` sevice its an *ExternalAccessToken* in Web.config.
+
+1. When a `Monitor Service` started its making a request to `Subscriptions API` to get subscription parameters for client machine. For security reasons `Subscriptions API` should use SSL to encrypt messages. Also, communication between client and API is protected with access token, which is specified in configuration files on both sides: for `Monitor Service` its an *AccessToken* in App.config, for `Subscriptions API` service its an *ExternalAccessToken* in Web.config.
 2. `Subscription API` executes query agains `Subscriptions DB` to find any subscription parmaeters for client machine. If there are any API sends them to client machine and `Monitor Service` starts parsing logs.
 3. If `Monitor Service` finds any match it emits special message to `Service Bus`. Connection between `Service Bus` and publishers/subscribers is encrypted and configured while installation process.
 4. 
