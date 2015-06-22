@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.ErrorHandling
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.Audit.Api", "AwesomeLogger.Audit.Api\AwesomeLogger.Audit.Api.csproj", "{19A98EA3-ECF0-4AF7-98A1-330F71E31716}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeLogger.Generator", "AwesomeLogger.Generator\AwesomeLogger.Generator.csproj", "{289990BA-DE54-48B6-8CEF-3FAD41C7F0E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{19A98EA3-ECF0-4AF7-98A1-330F71E31716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19A98EA3-ECF0-4AF7-98A1-330F71E31716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19A98EA3-ECF0-4AF7-98A1-330F71E31716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{289990BA-DE54-48B6-8CEF-3FAD41C7F0E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{289990BA-DE54-48B6-8CEF-3FAD41C7F0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{289990BA-DE54-48B6-8CEF-3FAD41C7F0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{289990BA-DE54-48B6-8CEF-3FAD41C7F0E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
