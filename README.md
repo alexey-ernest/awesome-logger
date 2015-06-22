@@ -116,9 +116,8 @@ Implemented as a Console Application. Should be [installed](#installing-monitor-
 * Parses files by reading line by line and testing against subscription's pattern. If line matches the pattern, parser emits corresponding message to Service Bus.
 * Listens for system events to be notified for changes according monitoring files. If file modified, renamed or created, the parser scans it again.
 
-
-
 ### Log Generator Service
+Implemented as a Console Application for testing purposes. Generates log files by reading user input.
 
 ### Service Bus
 Service Bus is used as a robust messaging service for loosely-coupled message-driven components of the system.
