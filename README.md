@@ -259,7 +259,7 @@ Specify settings in `Web.config`:
 * `Microsoft.ServiceBus.ConnectionString` - service bus [connection string](#installing-service-bus).
 
 Install for testing
-* Open solution in Visual Studio
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Right click on project, then select `Debug/Start new instance`
 * Service is running by IIS Express on `http://localhost:39152/` address.
 
@@ -276,7 +276,7 @@ Install for production
 ### Installing Audit API
 
 Install for testing
-* Open solution in Visual Studio
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Right click on project, then select `Debug/Start new instance`
 * Service is running by IIS Express on `http://localhost:39153/` address.
 
