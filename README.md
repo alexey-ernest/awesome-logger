@@ -185,6 +185,7 @@ The project powered by:
 * Microsoft Service Bus for Windows Server as communication channel and queue
 
 ## How to Build
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Open `AwesomeLogger/AwesomeLogger.sln`
 * Resotre NuGet packages by clicking right button on solution: `Manage NuGet Packages for Solution...`, then click `Restore` button.
 * Right click on Solution: `Rebuild Solution`
@@ -263,6 +264,7 @@ Install for testing
 * Service is running by IIS Express on `http://localhost:39152/` address.
 
 Install for production
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Open solution in Visual Studio
 * Select `Release` configuration
 * Right click on project, then select `Publish` and select the type of the publishing and fill required fields
@@ -279,6 +281,7 @@ Install for testing
 * Service is running by IIS Express on `http://localhost:39153/` address.
 
 Install for production
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Open solution in Visual Studio
 * Select `Release` configuration
 * Right click on project, then select `Publish` and select the type of the publishing and fill required fields
@@ -296,7 +299,7 @@ Specify settings in `Web.config`:
 * `AuditUri` - address of the [Audit API](#audit-api) service.
 
 Install for testing
-* Open solution in Visual Studio
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Right click on project, then select `Debug/Start new instance`
 * Service is running by IIS Express on `http://localhost:1915/` address.
 
