@@ -304,7 +304,7 @@ Install for testing
 * Service is running by IIS Express on `http://localhost:1915/` address.
 
 Install for production
-* Open solution in Visual Studio
+* Open Visual Studio with Administrator rights by clicking right button and selecting `Run as Administrator`
 * Select `Release` configuration
 * Right click on project, then select `Publish` and select the type of the publishing and fill required fields
 * Or you can click on project, then select `Rebuild` and then manually copy all files from `bin\Release` directory to IIS directory
