@@ -16,7 +16,7 @@ The system is built using Event-Driven-Architecture (EDA) and Service-Oriented-A
 
 Because subscriptions data and notification data have a very different frequency and purpose, I've decided to split theses APIs into two micro-services: `Subscriptions API` and `Notification Service`.
 
-The system is distributed and designed without Single-Point-Of-Failure (SPOF). Each component can be scaled and load balanced. For Audit DB NoSQL database is recommended because of high load and log-like structure (heavy write, no changes, low read). Cassandra can be perfectly meet this data usage pattern.
+The system is distributed and designed without Single-Point-Of-Failure (SPOF). Each component can be scaled and load balanced. For Audit DB NoSQL database is recommended because of high load and log-like structure (heavy write, no changes, low read). Cassandra perfectly meets this data usage pattern.
 
 ![](Assets/AwesomeLogger-Architecture.png?raw=true)
 
